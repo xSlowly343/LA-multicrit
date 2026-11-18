@@ -20,11 +20,11 @@ Mungga Lab, Inven, daloa.xyz, Maxroll. Иконки и эмблемы — мат
 1. https://dash.cloudflare.com → **Workers & Pages** → **Create** → **Import a repository** →
    выберите `xSlowly343/LA-multicrit`. Project name: `la-multicrit`, Build command пустой,
    Deploy command `npx wrangler deploy` (настройки берутся из `wrangler.toml` в корне). **Deploy**.
-2. После сборки скопируйте адрес Worker, например `https://la-multicrit.<ваш-поддомен>.workers.dev`.
-   Проверка: `https://la-multicrit.<ваш-поддомен>.workers.dev/?name=Ameyoru` — должна открыться
+2. После сборки скопируйте адрес Worker, например `https://la-multicrit.nekrozzzzzzzz.workers.dev`.
+   Проверка: `https://la-multicrit.nekrozzzzzzzz.workers.dev/?name=Ameyoru` — должна открыться
    страница Оружейной.
 3. В репозитории откройте `proxy.json`, нажмите карандаш (Edit) и впишите адрес:
-   `{"url": "https://la-multicrit.<ваш-поддомен>.workers.dev"}`. Commit changes.
+   `{"url": "https://la-multicrit.nekrozzzzzzzz.workers.dev"}`. Commit changes.
 
 Через минуту GitHub Pages обновится, и сайт начнёт загружать персонажей через ваш Worker.
 Каждый новый коммит в `main` Cloudflare будет пересобирать Worker сам.

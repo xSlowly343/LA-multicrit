@@ -15,21 +15,19 @@ Mungga Lab, Inven, daloa.xyz, Maxroll. Иконки и эмблемы — мат
 ник, запрашивает страницу персонажа и отдаёт её сайту. Пока прокси не подключён, сайт
 загружает персонажа через запасной сервис r.jina.ai.
 
-Развернуть (бесплатный тариф Cloudflare, без командной строки):
+Развернуть (бесплатный тариф Cloudflare):
 
-1. Зайдите на https://dash.cloudflare.com → **Workers & Pages** → **Create** →
-   **Create Worker** (шаблон «Hello World»). Имя: `la-armory`. Нажмите **Deploy**.
-2. Нажмите **Edit code**, удалите всё в редакторе, вставьте содержимое
-   `worker/armory-proxy.js` из этого репозитория и нажмите **Deploy**.
-3. Скопируйте адрес Worker, например `https://la-armory.<ваш-поддомен>.workers.dev`.
-   Проверка: откройте `https://la-armory.<ваш-поддомен>.workers.dev/?name=Ameyoru` —
-   должна открыться страница Оружейной.
-4. В этом репозитории откройте `proxy.json`, нажмите карандаш (Edit) и впишите адрес:
-   `{"url": "https://la-armory.<ваш-поддомен>.workers.dev"}`. Commit changes.
+1. https://dash.cloudflare.com → **Workers & Pages** → **Create** → **Import a repository** →
+   выберите `xSlowly343/LA-multicrit`. Project name: `la-multicrit`, Build command пустой,
+   Deploy command `npx wrangler deploy` (настройки берутся из `wrangler.toml` в корне). **Deploy**.
+2. После сборки скопируйте адрес Worker, например `https://la-multicrit.<ваш-поддомен>.workers.dev`.
+   Проверка: `https://la-multicrit.<ваш-поддомен>.workers.dev/?name=Ameyoru` — должна открыться
+   страница Оружейной.
+3. В репозитории откройте `proxy.json`, нажмите карандаш (Edit) и впишите адрес:
+   `{"url": "https://la-multicrit.<ваш-поддомен>.workers.dev"}`. Commit changes.
 
 Через минуту GitHub Pages обновится, и сайт начнёт загружать персонажей через ваш Worker.
-
-Через командную строку то же самое: `cd worker && npx wrangler deploy`.
+Каждый новый коммит в `main` Cloudflare будет пересобирать Worker сам.
 
 Если сайт переедет на другой домен, добавьте его в `ALLOWED_ORIGINS` в начале
 `worker/armory-proxy.js` (или переменной окружения `ALLOWED_ORIGINS` в настройках Worker,

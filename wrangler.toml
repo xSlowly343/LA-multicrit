@@ -1,0 +1,6 @@
+# Cloudflare Worker: прокси Оружейной лостарк.рф для загрузки персонажа по нику.
+# Деплой из корня репозитория: npx wrangler deploy (Cloudflare Workers Builds делает это сам).
+name = "la-multicrit"
+main = "worker/armory-proxy.js"
+compatibility_date = "2026-10-01"
+workers_dev = true

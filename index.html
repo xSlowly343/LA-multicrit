@@ -214,6 +214,11 @@ ol.src li{margin-bottom:6px;word-break:break-word}
 .t1row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .t1row label{display:grid;gap:4px;font-size:12.5px;color:var(--muted)}
 .t1row input{width:100%}
+.statrows{display:grid;gap:8px;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.statrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 10px;font-size:13px}
+.statrow label{display:grid;gap:2px;font-size:12px;color:var(--muted)}
+.statrow input{width:84px}
+.statrow .stot{font-size:12.5px;color:var(--fg);padding-bottom:6px}
 .englock{display:grid;grid-template-columns:32px 1fr 72px;gap:6px;align-items:center;margin-bottom:6px}
 .lockbtn{width:32px;height:32px;padding:0;display:grid;place-items:center}
 .lockbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
@@ -354,7 +359,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
 <div class="wrap">
 <header class="top">
   <div class="top-l">
-    <div class="eyebrow">Lost Ark KR · патч 18.11.2026 · версия сайта 23</div>
+    <div class="eyebrow">Lost Ark KR · патч 18.11.2026 · версия сайта 24</div>
     <h1>Мульти-крит: подбор билда</h1>
     <p class="lede">Выберите класс и пати — ниже сразу лучший билд с учётом мульти-крита.</p>
   </div>
@@ -630,7 +635,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     </form>
     <div id="impMsg" aria-live="polite"></div>
     <details class="why"><summary>Что загружается и откуда</summary>
-      <p class="help" style="margin:6px 0">Страница персонажа из Оружейной <a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a>: класс и путь, узлы Ark Passive, Смертоносность и Сноровка, гравировки и Фетранит, полировка бижутерии, браслет, свои скиллы с трайподами. Синергии пати выберите сами. У Оружейной нет открытого доступа для других сайтов, поэтому страница запрашивается через сервис r.jina.ai — он получает только ник. На RU-сервере мульти-крита ещё нет: калькулятор покажет, что будет после патча.</p>
+      <p class="help" style="margin:6px 0">Страница персонажа из Оружейной <a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a>: класс и путь, узлы Ark Passive, Смертоносность и Сноровка, гравировки и Фетранит, полировка бижутерии, браслет, свои скиллы с трайподами. Синергии пати выберите сами. У Оружейной нет открытого доступа для других сайтов, поэтому страница запрашивается через наш прокси (Cloudflare Worker), а если он недоступен — через сервис r.jina.ai. Им передаётся только ник. На RU-сервере мульти-крита ещё нет: калькулятор покажет, что будет после патча.</p>
       <p class="help" style="margin:0 0 4px">Если сервис не отвечает, можно загрузить сохранённую страницу персонажа (Ctrl+S на лостарк.рф):</p>
       <label class="drop" id="impDrop"><input type="file" id="impFile" accept=".html,.htm,text/html"><span>Файл страницы — перетащите сюда или нажмите</span></label>
     </details>
@@ -661,6 +666,17 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
           <label>Swiftness<input type="number" id="q_swift" min="0" max="30" step="1"></label>
         </div>
         <p class="help" style="margin-top:6px">Очки: <span id="q_t1left"></span></p>
+        <div class="statrows">
+          <div class="statrow"><b>Смертоносность</b><span class="help">вне Ark Passive:</span>
+            <label>браслет<input type="number" id="g_crit_br" min="0" max="120" step="1" value="100"></label>
+            <label>питомец, зелья, коллекция<input type="number" id="g_crit_ot" min="0" max="400" step="1" value="70"></label>
+            <span class="stot" id="tot_crit"></span></div>
+          <div class="statrow"><b>Сноровка</b><span class="help">вне Ark Passive:</span>
+            <label>браслет<input type="number" id="g_swift_br" min="0" max="120" step="1" value="100"></label>
+            <label>питомец, зелья, коллекция<input type="number" id="g_swift_ot" min="0" max="400" step="1" value="70"></label>
+            <span class="stot" id="tot_swift"></span></div>
+          <p class="help" style="margin:0">Бижутерия в Tier 4 статов не даёт. Браслет — до 120 на каждый из двух статов. Питомец — +160 к одному стату. Зелья и уровень экспедиции — около +32, коллекция карт — ещё около +40. При загрузке персонажа всё заполняется само.</p>
+        </div>
       </div>
     </details>
     <details class="set">
@@ -713,8 +729,6 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
           <div id="brCmp" class="s"></div>
         </details>
         <h4>Снаряжение и прочее</h4>
-        <div class="field"><label for="g_crit">Стат Crit со снаряжения</label><input type="number" id="g_crit" class="w100" min="0" max="3000" value="600"></div>
-        <div class="field"><label for="g_swift">Стат Swiftness со снаряжения</label><input type="number" id="g_swift" class="w100" min="0" max="3000" value="100"></div>
         <div class="field"><label for="g_cr">Прочий шанс крита, %</label><input type="number" id="g_cr" class="w100" min="0" max="200" step="0.1" value="0"><span class="help">Ark Grid и другое, чего нет в настройках. По умолчанию 0.</span></div>
         <div class="field"><label for="g_cd">Прочий крит. урон сверх 200%, %</label><input type="number" id="g_cd" class="w100" min="0" max="400" value="0"></div>
         <div class="field"><label for="g_evo">Прочий Evolution damage, %</label><input type="number" id="g_evo" class="w100" min="0" max="200" step="0.1" value="0"><span class="help">Ранг Karma.</span></div>
@@ -1192,7 +1206,8 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const x={C:0,D:200,R:0,evo:0,add:0,dmg:1,as:0,ms:0,rc:0,aero:false,per:[],src:[]};
     const S=(k,n,v)=>{ if(!v) return; if(k==='dmg') x.dmg*=1+v/100; else x[k]+=v; x.src.push([k,n,v]); };
     x.src.push(['D','Базовый крит. урон',200]);
-    x.critStat=num('g_crit'); x.swift=num('g_swift');
+    x.critBr=num('g_crit_br'); x.critOt=num('g_crit_ot'); x.swiftBr=num('g_swift_br'); x.swiftOt=num('g_swift_ot');
+    x.critStat=x.critBr+x.critOt; x.swift=x.swiftBr+x.swiftOt;
     const pos=Math.max(0,Math.min(100,num('s_pos',90)))/100;
     S('C','Прочее (Ark Grid и др.)',num('g_cr')); S('C','Класс: свой бонус',cls.self||0);
     if($('s_back').checked) S('C',`Удары в спину: +10% × ${Math.round(pos*100)}% попаданий`,10*pos);
@@ -1273,8 +1288,11 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     // stats: displayed Crit / Swiftness include Evolution Tier 1 points (50 per level)
     const st = k => { const row=d.stats.find(s=>k.includes(s[0])); return row?intR(row[1]):null; };
     const cr=st(['치명','Смертоносность']), sw=st(['신속','Сноровка']);
-    if(cr!==null){ $('g_crit').value=Math.max(0,cr-50*(ranks.crit||0)); log.push(`Смертоносность ${cr}`); }
-    if(sw!==null){ $('g_swift').value=Math.max(0,sw-50*(ranks.swift||0)); log.push(`Сноровка ${sw}`); }
+    const brT=((d.equip||[]).find(e=>/팔찌|Браслет/.test(e[0]))||['',''])[1];
+    const brStat=re=>Math.min(120,intR((brT.match(re)||[])[1]||0));
+    const setStat=(tot,lvl,re,br,ot,label)=>{ if(tot===null) return; const b=brStat(re); $(br).value=b; $(ot).value=Math.max(0,tot-50*lvl-b); log.push(`${label} ${tot} = Ark Passive ${50*lvl} + браслет ${b} + прочее ${Math.max(0,tot-50*lvl-b)}`); };
+    setStat(cr, ranks.crit||0, /(?:치명|Смертоносность)\s*\+\s*(\d+)/, 'g_crit_br','g_crit_ot','Смертоносность');
+    setStat(sw, ranks.swift||0, /(?:신속|Сноровка)\s*\+\s*(\d+)/, 'g_swift_br','g_swift_ot','Сноровка');
     // engravings: [id, Fetranite level]
     let eng=[];
     eng=(d.eng||[]).map(([n,html])=>{ const s=(html.match(/ability_stone[^>]*>(?:<\/em>)?\s*<font[^>]*>\s*(\d)/i)||[])[1]; const l=(html.match(/x\s*<font[^>]*>\s*(\d)/i)||[])[1]; return [DATA.engkr[n]||ENGRU[n]||'', +s||0, n, +l||0]; });
@@ -1369,9 +1387,9 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   function explain(r, x, B){
     const g=id=>r[id]||0, N=id=>BYID[id].n+(BYID[id].max>1?' '+g(id):''), out={C:[],D:[],R:[],evo:[],add:[],dmg:[],as:[],ms:[]};
     const P=(k,n,v)=>{ if(v) out[k].push([n,v]); };
-    P('C',`Смертоносность ${Math.round(B.critStat)}${g('crit')?` (снаряжение ${Math.round(x.critStat)} + Ark Passive ${50*g('crit')})`:''}`,B.critStat*CRIT_PT);
+    P('C',`Смертоносность ${Math.round(B.critStat)} (Ark Passive ${50*g('crit')} + браслет ${x.critBr} + прочее ${x.critOt})`,B.critStat*CRIT_PT);
     x.src.forEach(([k,n,v])=>{ if(out[k]) out[k].push([n,v]); });
-    const sw=(x.swift+50*g('swift'))*SWIFT_PT; P('as',`Сноровка ${Math.round(x.swift+50*g('swift'))}`,sw); P('ms',`Сноровка ${Math.round(x.swift+50*g('swift'))}`,sw);
+    const sw=(x.swift+50*g('swift'))*SWIFT_PT, swl=`Сноровка ${Math.round(x.swift+50*g('swift'))} (Ark Passive ${50*g('swift')} + браслет ${x.swiftBr} + прочее ${x.swiftOt})`; P('as',swl,sw); P('ms',swl,sw);
     ['charger','goddess','advance'].forEach(id=>{ const v={charger:4,goddess:3,advance:4}[id]*g(id); if(g(id)){ P('as',N(id),v); if(id!=='charger') P('ms',N(id),v); } });
     P('C',N('keen'),4*g('keen')); P('C',N('zealous'),12*g('zealous')); P('C',N('strike'),10*g('strike')); if(g('master')) P('C',`Master (${x.mst} стаков)`,1.4*x.mst); if(x.aero) P('C','Aeromancer: скорость бега × 0.3',0.3*B.ms);
     if(x.dir) P('D',N('strike')+' (directional)',16*g('strike')); if(x.aero) P('D','Aeromancer: скорость атаки × 1.2',1.2*B.as);
@@ -1645,14 +1663,16 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const cur=curEng();
     syncQuick();
     $('sumEng').textContent = cur.filter(e=>e[0]).map(([id,l])=>ENGBY[id].n.split(' — ')[0]+(l?' Ф'+l:'')).join(', ') || 'не выбраны';
-    $('sumT1').textContent = `Crit ${ranks.crit||0} · Spec ${ranks.spec||0} · Swift ${ranks.swift||0}`;
+    const tc=50*(ranks.crit||0)+num('g_crit_br')+num('g_crit_ot'), ts=50*(ranks.swift||0)+num('g_swift_br')+num('g_swift_ot');
+    $('tot_crit').textContent=`= ${tc} → шанс +${(tc*CRIT_PT).toFixed(1)}%`; $('tot_swift').textContent=`= ${ts} → скорость +${(ts*SWIFT_PT).toFixed(1)}%`;
+    $('sumT1').textContent = `Crit ${ranks.crit||0} · Spec ${ranks.spec||0} · Swift ${ranks.swift||0} · Смертоносность ${tc} · Сноровка ${ts}`;
     const critNodes=[...cls.enl,...cls.leap].filter(n=>lv[n.k] && n.e && (n.e.C||n.e.D||n.e.per||n.e.aero||n.e.dmg));
     $('sumNodes').textContent = (cls.paths[pathIdx]?cls.paths[pathIdx].n+' · ':'')+(critNodes.length?critNodes.length+' с критом/уроном':'без крит-узлов');
     $('sumSk').textContent = [ $('s_mana').checked?'мана':'без маны', $('s_back').checked?'в спину':'', $('s_head').checked?'в голову':'' ].filter(Boolean).join(' · ');
     if($('link').checked && B){ setPair('cr','crN',Math.min(B.ce,500).toFixed(1)); setPair('cd','cdN',B.D.toFixed(0)); setPair('rr','rrN',((B.R-1)*100).toFixed(1)); }
   }
   function curBuildHtml(B, X, cur, ar){
-    const ex=explain(ar, X, B); const f=v=>(Math.abs(v)<10?v.toFixed(2):v.toFixed(1)).replace(/\.?0+$/,'');
+    const ex=explain(ar, X, B); const f=v=>v.toFixed(2).replace(/\.?0+$/,'');
     const grp=(t,k,tot,unit='%')=>{ const rows=ex[k]; if(!rows.length) return ''; return `<div class="exg"><div class="exh"><b>${t}</b><b>${k==='dmg'?'×'+X.dmg.toFixed(3):f(tot)+unit}</b></div>${rows.map(([n,v])=>`<div class="exr"><span>${esc(n)}</span><span>${v>0?'+':''}${f(v)}${unit}</span></div>`).join('')}</div>`; };
     const dmgTot=(X.dmg-1)*100;
     const sk = X.skills ? `<p class="help" style="margin:6px 0 0">Шанс и крит. урон выше — общие. Свои бонусы у скиллов (трайпод «крит +X%») и доли урона — в «Скиллы»; ${B.t5==='bt'?'с Blunt Thorn мульти-крита нет (шанс ограничен 80%)':'мульти-крит в среднем у '+pct(B.mc,0)+' ударов'}.</p>` : '';
@@ -1762,7 +1782,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
 
   $('charPanel').addEventListener('input',e=>{ if(e.target.matches('input[type=number]')) recompute(); });
   $('v-build').addEventListener('change',e=>{ if(e.target.matches('#s_mana')) $('mpField').hidden=!$('s_mana').checked; if(e.target.matches('#c_t1, #c_t2, #c_t3, #c_dance, #s_mana, #s_back, #s_head, #stA, #stB, #s_bysk, #s_part')) recompute(); });
-  $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp')) recompute(); });
+  $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp, #g_crit_br, #g_crit_ot, #g_swift_br, #g_swift_ot')) recompute(); });
   $('charPanel').addEventListener('change',e=>{ if(e.target.matches('input[type=checkbox], #c_t1, #c_t2, #c_t3, #br1, #br2, #br3, #bc1, #bc2, #bc3')) recompute(); });
 
   // import panel: file of the saved page, drag & drop, or pasted page source
@@ -1781,18 +1801,29 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.remove('over'); }));
   dz.addEventListener('drop',e=>readFile(e.dataTransfer.files[0]));
   const RU_ARMORY='https://xn--80aubmleh.xn--p1ai/Profile/Character/';
+  // own Cloudflare Worker (address in proxy.json next to the page) first, r.jina.ai as a fallback
+  let proxyUrl = '';
+  const proxyReady = fetch('proxy.json',{cache:'no-store'}).then(r=>r.ok?r.json():{}).then(j=>{ proxyUrl=String(j&&j.url||'').replace(/\/+$/,''); }).catch(()=>{});
+  async function fetchArmory(n, signal){
+    await proxyReady;
+    if(proxyUrl){ try{ const r=await fetch(proxyUrl+'/?name='+encodeURIComponent(n),{signal});
+        if(r.status===404) return {notFound:true};
+        if(r.ok) return {html:await r.text(), via:'worker'}; }catch(e){ if(e.name==='AbortError') throw e; } }
+    const get=()=>fetch('https://r.jina.ai/'+RU_ARMORY+encodeURIComponent(n),{headers:{'X-Return-Format':'html'},signal});
+    let r=await get(); if(r.status===401||r.status===422||r.status>=500){ await new Promise(z=>setTimeout(z,1500)); r=await get(); }
+    if(!r.ok) return {status:r.status};
+    const html=await r.text(); return /profile-character-info/.test(html)?{html, via:'jina'}:{notFound:true};
+  }
   async function importByName(){
     const n=$('impName').value.trim(); if(!n) return impFail('Впишите ник персонажа.');
     try{ localStorage.setItem('laNick',n); }catch(e){}
     $('impGo').disabled=true; $('impMsg').innerHTML='<p class="help" style="margin:6px 0 0">Загружаю персонажа…</p>';
     const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),40000);
-    try{ const get=()=>fetch('https://r.jina.ai/'+RU_ARMORY+encodeURIComponent(n),{headers:{'X-Return-Format':'html'},signal:ctl.signal});
-      let r=await get(); if(r.status===401||r.status===422||r.status>=500){ await new Promise(z=>setTimeout(z,1500)); r=await get(); }
-      if(r.status===429) return impFail('Слишком много запросов подряд. Подождите минуту и попробуйте снова.');
-      if(!r.ok) return impFail('Оружейная не ответила (код '+r.status+'). Попробуйте ещё раз чуть позже или загрузите сохранённую страницу (ниже, «Что загружается и откуда»).');
-      const html=await r.text();
-      if(!/profile-character-info/.test(html)) return impFail(`Персонаж «${n}» не найден в Оружейной лостарк.рф. Проверьте ник (регистр букв не важен).`);
-      importHtml(html);
+    try{ const res=await fetchArmory(n, ctl.signal);
+      if(res.notFound) return impFail(`Персонаж «${n}» не найден в Оружейной лостарк.рф. Проверьте ник.`);
+      if(res.status===429) return impFail('Слишком много запросов подряд. Подождите минуту и попробуйте снова.');
+      if(!res.html) return impFail('Оружейная не ответила (код '+res.status+'). Попробуйте ещё раз чуть позже или загрузите сохранённую страницу (ниже, «Что загружается и откуда»).');
+      importHtml(res.html);
     }catch(e){ impFail(e.name==='AbortError'?'Оружейная долго не отвечает. Попробуйте ещё раз.':'Не удалось загрузить: '+e.message+'. Можно загрузить сохранённую страницу (ниже, «Что загружается и откуда»).'); }
     finally{ clearTimeout(tm); $('impGo').disabled=false; }
   }

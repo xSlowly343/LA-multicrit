@@ -106,7 +106,7 @@ math[display="block"]{margin:2px 0}
 .field label output{font-family:var(--f-mono);color:var(--accent);font-weight:600}
 .row{display:flex;gap:8px;align-items:center}
 input[type=range]{flex:1;accent-color:var(--accent);min-width:0}
-input[type=number],select{font:inherit;font-family:var(--f-mono);font-size:14px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--surface2);color:var(--fg);min-width:0}
+input[type=number],input[type=text],select{font:inherit;font-family:var(--f-mono);font-size:14px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--surface2);color:var(--fg);min-width:0}
 input[type=number]{width:84px}
 select{width:100%;font-family:var(--f-body)}
 .w100{width:100%!important}
@@ -256,11 +256,20 @@ body.adv .simple-only{display:none!important}
 @media (min-width:881px){ body:not(.adv) .quick .out{position:sticky;top:12px} }
 .pathcmp{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14px;display:grid;gap:4px;margin-bottom:6px}
 .pathcmp:empty{display:none}
-.imp .seg{margin-bottom:8px}
+.imp{padding:12px 16px}
+.improw{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.improw label{margin-right:4px}
+.improw input{flex:1 1 180px;min-width:0;max-width:320px;font-family:var(--f-body);font-size:15px;padding:8px 10px}
+.imp details.why{margin-top:4px}
+.imp .inl{display:inline-flex;gap:6px;flex-wrap:wrap;margin-top:4px;vertical-align:middle}
+.imp .inl input{width:180px}
+.imp .drop{display:flex;align-items:center;justify-content:center;text-align:center;min-height:84px;border:2px dashed var(--line);border-radius:12px;cursor:pointer;color:var(--muted);font-size:14px;padding:10px;position:relative}
+.imp .drop:hover,.imp .drop.over{border-color:var(--accent);color:var(--fg);background:var(--accent-soft)}
+.imp .drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.imp .drop:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 .imp textarea{width:100%;font-family:var(--mono,monospace);font-size:12px}
 .imp .steps{margin:0 0 8px;padding-left:20px;font-size:13.5px}
 .imp .steps li{margin:3px 0}
-a.bm{display:inline-block;padding:3px 10px;border:1px dashed var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-weight:600;cursor:grab}
 .imp .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 #setSk[open]{grid-column:1/-1}
 .sktwrap{overflow-x:auto;max-width:100%;margin-top:6px}
@@ -600,30 +609,19 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     <p class="help adv-only" id="c_synInfo" style="margin:2px 0 0"></p>
   </div>
 
-  <details class="set imp" id="impBox">
-    <summary><b>Загрузить своего персонажа</b><span class="sum">Оружейная KR / RU или Open API</span></summary>
-    <div class="setbody">
-      <div class="seg" role="group" aria-label="Источник"><button type="button" data-imptab="arm" aria-pressed="true">Оружейная (KR и RU)</button><button type="button" data-imptab="api" aria-pressed="false">Open API (KR)</button></div>
-      <div id="impArm">
-        <ol class="steps">
-          <li>Перетащите эту кнопку на панель закладок браузера: <a id="bmLink" class="bm" href="#">LA: данные персонажа</a></li>
-          <li>Откройте своего персонажа в Оружейной — <a href="https://lostark.game.onstove.com/Profile/Character" target="_blank" rel="noopener">lostark.game.onstove.com</a> (KR) или <a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a> (RU) — и нажмите закладку. Данные скопируются.</li>
-          <li>Вставьте их сюда и нажмите «Загрузить».</li>
-        </ol>
-        <textarea id="impText" rows="3" placeholder="Вставьте данные из закладки" aria-label="Данные персонажа"></textarea>
-        <div class="btns"><button type="button" class="primary" id="impGo">Загрузить</button><button type="button" id="bmCopy">Скопировать код для консоли</button></div>
-        <p class="help">Без закладок (например, на телефоне): скопируйте код, на странице персонажа откройте консоль браузера (F12 → Console), вставьте и нажмите Enter. Код только читает страницу и ничего никуда не отправляет.</p>
-      </div>
-      <div id="impApi" hidden>
-        <div class="field"><label for="apiName">Имя персонажа (KR сервер)</label><input type="text" id="apiName" autocomplete="off"></div>
-        <div class="field"><label for="apiKey">Ключ Open API</label><input type="password" id="apiKey" autocomplete="off"><span class="help">Бесплатный ключ: developer-lostark.game.onstove.com → вход через Stove → Create a new client → ключ на странице My Clients. Лимит 100 запросов в минуту.</span></div>
-        <label class="chk"><input type="checkbox" id="apiSave" checked> Запомнить ключ в этом браузере (никуда не отправляется, кроме API Lost Ark)</label>
-        <div class="btns"><button type="button" class="primary" id="apiGo">Загрузить</button></div>
-      </div>
-      <div id="impMsg" aria-live="polite"></div>
-      <p class="help">Загружаются: класс и путь, узлы Ark Passive, Crit и Swiftness, гравировки и Фетранит, полировка бижутерии, браслет, свои скиллы с трайподами. Синергии пати выберите сами. RU-сервер ещё без мульти-крита — калькулятор покажет, что будет после патча.</p>
-    </div>
-  </details>
+  <div class="panel imp" id="impBox">
+    <form class="improw" id="impForm" autocomplete="off">
+      <label for="impName"><b>Мой персонаж</b> <span class="help">RU-сервер</span></label>
+      <input type="text" id="impName" placeholder="Ник персонажа" spellcheck="false" autocapitalize="off" enterkeyhint="go">
+      <button type="submit" class="primary" id="impGo">Загрузить</button>
+    </form>
+    <div id="impMsg" aria-live="polite"></div>
+    <details class="why"><summary>Что загружается и откуда</summary>
+      <p class="help" style="margin:6px 0">Страница персонажа из Оружейной <a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a>: класс и путь, узлы Ark Passive, Смертоносность и Сноровка, гравировки и Фетранит, полировка бижутерии, браслет, свои скиллы с трайподами. Синергии пати выберите сами. У Оружейной нет открытого доступа для других сайтов, поэтому страница запрашивается через сервис r.jina.ai — он получает только ник. На RU-сервере мульти-крита ещё нет: калькулятор покажет, что будет после патча.</p>
+      <p class="help" style="margin:0 0 4px">Если сервис не отвечает, можно загрузить сохранённую страницу персонажа (Ctrl+S на лостарк.рф):</p>
+      <label class="drop" id="impDrop"><input type="file" id="impFile" accept=".html,.htm,text/html"><span>Файл страницы — перетащите сюда или нажмите</span></label>
+    </details>
+  </div>
 
   <div class="panel answer" id="answer" aria-live="polite"></div>
   <textarea id="copyBox" hidden rows="4" style="width:100%" aria-label="Текст билда"></textarea>
@@ -821,7 +819,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       <li><span class="tag hyp">?</span>Значения Lv.1 у Standing Striker и MP Furnace, тексты Infighting и Stable Manager не найдены.</li>
       <li><span class="tag hyp">?</span>Скилл с трайподом «всегда крит» критует ровно со 100% (без мульти-крита) и получает +X% урона за каждый 1% шанса крита — по формулировке трайпода и заметке loagg о Lancemaster.</li>
       <li><span class="tag hyp">?</span>Доля урона скилла по умолчанию — урон из подсказки ÷ перезарядка по профилям топ-игроков; трайповые множители урона и камни не учитываются. Долю можно поправить вручную.</li>
-      <li><span class="tag hyp">?</span>Импорт: гравировки ниже x4 считаются как реликтовые x4; формат описаний узлов в Open API взят из схемы Swagger и Оружейной (проверен на подставленном ответе, не на живом ключе).</li>
+      <li><span class="tag hyp">?</span>Импорт: гравировки ниже x4 считаются как реликтовые x4.</li>
     </ul>
   </section>
   <section>
@@ -839,7 +837,6 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       <li><a href="https://lostark.wiki.fextralife.com/Engravings" target="_blank" rel="noopener">Fextralife: названия гравировок</a>, <a href="https://en.namu.wiki/w/%EB%A1%9C%EC%8A%A4%ED%8A%B8%EC%95%84%ED%81%AC/%ED%81%B4%EB%9E%98%EC%8A%A4" target="_blank" rel="noopener">NamuWiki: названия классов</a></li>
       <li><a href="https://docs.google.com/spreadsheets/d/1gYHl_1xiT0PVZf_2w9STAfLDXA0DBYFl4JJiJ6ZmYqc/edit" target="_blank" rel="noopener">Таблица Evermind</a> (Inven): все 897 ячеек совпали с формулой сайта</li>
       <li><a href="https://www.inven.co.kr/board/lostark/4821/111078" target="_blank" rel="noopener">Inven: Blunt Thorn против мульти-крита</a> (신촌망령, 18.11.2026)</li>
-      <li><a href="https://developer-lostark.game.onstove.com/getting-started" target="_blank" rel="noopener">Lost Ark Open API</a>: схема ответа ARMORIES, ключ, лимиты</li>
       <li><a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a> (Оружейная RU) и <a href="https://www.mokitoki.ru/statistics" target="_blank" rel="noopener">mokitoki.ru</a>: русские названия гравировок, формат RU-подсказок</li>
     </ol>
     <p class="help">Иконки и эмблемы классов — материалы Smilegate RPG из Official Armory.</p>
@@ -1191,8 +1188,28 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     return x;
   }
   /* ---------- character import: Official Armory page (KR / RU, via bookmarklet) or Open API (KR) ---------- */
-  const BM_SRC = `(()=>{try{const s=t=>(t||'').replace(/\\s+/g,' ').trim();const P=(window.$&&$.Profile)||(()=>{const o={};for(const sc of document.scripts){const t=sc.textContent;const i=t.indexOf('$.Profile');if(i>=0){try{Function('$',t.slice(i))(o);}catch(e){}if(o.Profile)return o.Profile;}}return {};})();const T=h=>s(String(h==null?'':h).replace(/<[^>]+>/g,' '));const flat=o=>{const a=[];(function r(v){if(v==null)return;if(typeof v==='string')a.push(T(v));else if(typeof v==='object')Object.values(v).forEach(r);})(o);return a.join(' | ');};const q=(el,sel)=>el.querySelector(sel);const img=q(document,'.profile-character-info__img img');const seen=new Set();const d={v:1,src:location.host,emb:img?(img.getAttribute('src')||'').split('/').pop():'',stats:[...document.querySelectorAll('.profile-ability-battle > ul > li')].map(li=>{const sp=li.querySelectorAll(':scope > span');return [s(sp[0]&&sp[0].textContent),s(sp[1]&&sp[1].textContent)];}),nodes:[...document.querySelectorAll('.profile-skill-arkpassive__item')].map(el=>{const i=q(el,'.profile-arkpassive__info'),m=q(el,'.profile-arkpassive__slot img');return [el.classList.contains('evolution')?'evo':el.classList.contains('enlightenment')?'enl':'leap',s(i&&i.textContent),(m&&m.getAttribute('src')||'').split('/').pop()];}).filter(n=>{const k=n.join('|');if(seen.has(k))return false;seen.add(k);return true;}),eng:[...document.querySelectorAll('.profile-ability-engrave li')].map(li=>{const sp=q(li,'span');return [s(sp&&q(sp,'font')&&q(sp,'font').textContent),sp?sp.innerHTML:''];}),equip:Object.values(P.Equip||{}).map(v=>[T(v.Element_000&&v.Element_000.value),flat(v)]).filter(e=>/목걸이|귀걸이|반지|팔찌|Ожерелье|Серьги|Кольцо|Браслет/.test(e[0])),skills:Object.values(P.Skill||{}).map(v=>{const e=Object.values(v).filter(Boolean);const g=t=>e.filter(x=>x.type===t);const tri=(g('TripodSkillCustom')[0]||{}).value||{};const ti=(g('CommonSkillTitle')[0]||{}).value||{};return {n:T((g('NameTagBox')[0]||{}).value),cd:T(ti.leftText),ic:((ti.slotData||{}).iconPath||'').split('/').pop(),t:g('SingleTextBox').map(x=>T(x.value)).join(' | '),c:g('MultiTextBox').map(x=>T(x.value)).join(' '),tri:Object.values(tri).filter(x=>x&&x.name).map(x=>[T(x.name),T(x.desc)])};})};const j=JSON.stringify(d);const ok=()=>alert('Данные персонажа скопированы. Вставьте их на сайте «Мульти-крит Lost Ark» (Загрузить своего персонажа).');if(navigator.clipboard)navigator.clipboard.writeText(j).then(ok,()=>prompt('Скопируйте текст (Ctrl+C):',j));else prompt('Скопируйте текст (Ctrl+C):',j);}catch(e){alert('Не получилось: '+e.message+'. Откройте страницу персонажа в Оружейной.');}})()`;
-  const ENGRU = {'Голем':'doll','Титаноборец':'grudge','Карающая длань':'mass','Моргенштерн':'kbw','Адреналин':'adr','Бесшумный убийца':'ambush','Гильотина':'brawler','Побоище':'hit','Неутомимый натиск':'raid','Мастер подготовки':'charge','Скоротечная расправа':'allout','Лучшая защита':'barricade','Стремительность':'spirit'};
+  // Armory page (лостарк.рф) saved as a file or its page source → character data. Nothing is executed: the HTML is only parsed.
+  function armoryJson(html){ // $.Profile = {...}; — cut out the object literal by brace matching and parse it as JSON
+    const i=html.indexOf('$.Profile'); if(i<0) return {}; const j=html.indexOf('{',i); if(j<0) return {};
+    let d=0,inS=false,esc=false; for(let k=j;k<html.length;k++){ const c=html[k];
+      if(inS){ if(esc) esc=false; else if(c==='\\') esc=true; else if(c==='"') inS=false; continue; }
+      if(c==='"') inS=true; else if(c==='{') d++; else if(c==='}'){ d--; if(!d){ try{ return JSON.parse(html.slice(j,k+1)); }catch(e){ return {}; } } } }
+    return {}; }
+  function parseArmoryHtml(html){
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    const s=t=>(t||'').replace(/\s+/g,' ').trim(), T=x=>s(String(x==null?'':x).replace(/<[^>]+>/g,' '));
+    const flat=o=>{ const a=[]; (function r(v){ if(v==null) return; if(typeof v==='string') a.push(T(v)); else if(typeof v==='object') Object.values(v).forEach(r); })(o); return a.join(' | '); };
+    const q=(el,sel)=>el.querySelector(sel), file=el=>(el&&el.getAttribute('src')||'').split('?')[0].split('/').pop();
+    const P=armoryJson(html); const seen=new Set();
+    return {v:1, emb:file(q(doc,'.profile-character-info__img img')), name:s((q(doc,'.profile-character-info__name')||{}).textContent),
+      stats:[...doc.querySelectorAll('.profile-ability-battle > ul > li')].map(li=>{ const sp=li.querySelectorAll(':scope > span'); return [s(sp[0]&&sp[0].textContent), s(sp[1]&&sp[1].textContent)]; }),
+      nodes:[...doc.querySelectorAll('.profile-skill-arkpassive__item')].map(el=>[el.classList.contains('evolution')?'evo':el.classList.contains('enlightenment')?'enl':'leap', s((q(el,'.profile-arkpassive__info')||{}).textContent), file(q(el,'.profile-arkpassive__slot img'))]).filter(n=>{ const k=n.join('|'); if(seen.has(k)) return false; seen.add(k); return true; }),
+      eng:[...doc.querySelectorAll('.profile-ability-engrave li')].map(li=>{ const sp=q(li,'span'); return [s(sp&&q(sp,'font')&&q(sp,'font').textContent), sp?sp.innerHTML:'']; }),
+      equip:Object.values(P.Equip||{}).map(v=>[T(v&&v.Element_000&&v.Element_000.value), flat(v)]).filter(e=>/목걸이|귀걸이|반지|팔찌|Ожерелье|Серьги|Кольцо|Браслет/.test(e[0])),
+      skills:Object.values(P.Skill||{}).map(v=>{ const e=Object.values(v||{}).filter(Boolean); const g=t=>e.filter(x=>x.type===t); const tri=(g('TripodSkillCustom')[0]||{}).value||{}; const ti=(g('CommonSkillTitle')[0]||{}).value||{};
+        return {n:T((g('NameTagBox')[0]||{}).value), cd:T(ti.leftText), ic:((ti.slotData||{}).iconPath||'').split('/').pop(), t:g('SingleTextBox').map(x=>T(x.value)).join(' | '), c:g('MultiTextBox').map(x=>T(x.value)).join(' '), tri:Object.values(tri).filter(x=>x&&x.name).map(x=>[T(x.name),T(x.desc)])}; })};
+  }
+  const ENGRU = {'Голем':'doll','Титаноборец':'grudge','Карающая длань':'mass','Моргенштерн':'kbw','Адреналин':'adr','Бесшумный убийца':'ambush','Гильотина':'brawler','Побоище':'hit','Неутомимый натиск':'raid','Мастер подготовки':'charge','Скоротечная расправа':'allout','Лучшая защита':'barricade','Стремительность':'spirit','Скальпель':'pd','Астральное тело':'mpeff'};
   const numR = s => parseFloat(String(s).replace(/\s/g,'').replace(',','.'));
   const intR = s => parseInt(String(s).replace(/[^\d]/g,''),10)||0;
   const nearestI = (arr,v) => arr.reduce((b,x,i)=> x===null?b : (b<0||Math.abs(x-v)<Math.abs(arr[b]-v)?i:b), -1);
@@ -1211,19 +1228,6 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       if(Object.keys(e).length && /дополнительн\S* атак|взрыв|последн\S* атак|завершающ/i.test(d)) e.part=1;
     }
     return Object.keys(e).length?e:null; }
-  // Open API response → the same shape as the bookmarklet output
-  function fromApi(a){ const T=h=>String(h==null?'':h).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    const flat=o=>{ const out=[]; (function r(v){ if(v==null) return; if(typeof v==='string') out.push(T(v)); else if(typeof v==='object') Object.values(v).forEach(r); })(o); return out.join(' | '); };
-    const tip=t=>{ try{ return JSON.parse(t); }catch(e){ return t; } };
-    const pr=a.ArmoryProfile||{};
-    return {v:1, src:'api', cn:pr.CharacterClassName||'',
-      stats:(pr.Stats||[]).map(s=>[s.Type,String(s.Value)]),
-      nodes:((a.ArkPassive||{}).Effects||[]).map(e=>{ const n=T(e.Name), dsc=T(e.Description); return [/진화/.test(n+dsc.slice(0,4))?'evo':/깨달음/.test(n+dsc.slice(0,5))?'enl':'leap', dsc, String(e.Icon||'').split('/').pop()]; }),
-      engApi:((a.ArmoryEngraving||{}).ArkPassiveEffects||[]).map(e=>[e.Name, e.Level, e.AbilityStoneLevel||0]),
-      equip:(a.ArmoryEquipment||[]).filter(e=>/목걸이|귀걸이|반지|팔찌/.test((e.Type||'')+(e.Name||''))).map(e=>[(e.Type||'')+' '+(e.Name||''), flat(tip(e.Tooltip))]),
-      skills:(a.ArmorySkills||[]).map(s=>{ const t=tip(s.Tooltip); const el=typeof t==='object'?Object.values(t).filter(Boolean):[]; const ti=(el.find(x=>x.type==='CommonSkillTitle')||{}).value||{};
-        return {n:s.Name, lvl:s.Level, cd:T(ti.leftText), ic:String(s.Icon||'').split('/').pop(), t:el.filter(x=>x.type==='SingleTextBox').map(x=>T(x.value)).join(' | '), c:el.filter(x=>x.type==='MultiTextBox').map(x=>T(x.value)).join(' '), tri:(s.Tripods||[]).filter(x=>x.IsSelected).map(x=>[x.Name, T(x.Tooltip)])}; })};
-  }
   let skCustom = store.get('skCustom1') || {};
   function applyImport(d){
     const log=[], warn=[];
@@ -1247,12 +1251,11 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     // stats: displayed Crit / Swiftness include Evolution Tier 1 points (50 per level)
     const st = k => { const row=d.stats.find(s=>k.includes(s[0])); return row?intR(row[1]):null; };
     const cr=st(['치명','Смертоносность']), sw=st(['신속','Сноровка']);
-    if(cr!==null){ $('g_crit').value=Math.max(0,cr-50*(ranks.crit||0)); log.push(`Crit ${cr}`); }
-    if(sw!==null){ $('g_swift').value=Math.max(0,sw-50*(ranks.swift||0)); log.push(`Swiftness ${sw}`); }
+    if(cr!==null){ $('g_crit').value=Math.max(0,cr-50*(ranks.crit||0)); log.push(`Смертоносность ${cr}`); }
+    if(sw!==null){ $('g_swift').value=Math.max(0,sw-50*(ranks.swift||0)); log.push(`Сноровка ${sw}`); }
     // engravings: [id, Fetranite level]
     let eng=[];
-    if(d.engApi) eng=d.engApi.map(([n,l,s])=>[DATA.engkr[n]||'', +s||0, n, +l||0]);
-    else eng=(d.eng||[]).map(([n,html])=>{ const s=(html.match(/ability_stone[^>]*>(?:<\/em>)?\s*<font[^>]*>\s*(\d)/i)||[])[1]; const l=(html.match(/x\s*<font[^>]*>\s*(\d)/i)||[])[1]; return [DATA.engkr[n]||ENGRU[n]||'', +s||0, n, +l||0]; });
+    eng=(d.eng||[]).map(([n,html])=>{ const s=(html.match(/ability_stone[^>]*>(?:<\/em>)?\s*<font[^>]*>\s*(\d)/i)||[])[1]; const l=(html.match(/x\s*<font[^>]*>\s*(\d)/i)||[])[1]; return [DATA.engkr[n]||ENGRU[n]||'', +s||0, n, +l||0]; });
     const known=eng.filter(e=>e[0]), unk=eng.filter(e=>!e[0]);
     if(unk.length) warn.push('гравировки не из списка калькулятора: '+unk.map(e=>e[2]).join(', '));
     if(known.some(e=>e[3] && e[3]<4)) warn.push('часть гравировок не x4 — калькулятор считает их как реликтовые x4');
@@ -1703,25 +1706,39 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp')) recompute(); });
   $('charPanel').addEventListener('change',e=>{ if(e.target.matches('input[type=checkbox], #c_t1, #c_t2, #c_t3, #br1, #br2, #br3, #bc1, #bc2, #bc3')) recompute(); });
 
-  // import panel
-  $('bmLink').setAttribute('href','javascript:'+encodeURIComponent(BM_SRC));
-  $('bmLink').addEventListener('click',e=>{ e.preventDefault(); $('impMsg').innerHTML='<span class="help">Эту кнопку нужно не нажимать здесь, а перетащить на панель закладок и нажать на странице персонажа в Оружейной.</span>'; });
-  $('bmCopy').addEventListener('click',()=>{ const done=()=>{ $('bmCopy').textContent='Код скопирован'; setTimeout(()=>$('bmCopy').textContent='Скопировать код для консоли',1500); }; if(navigator.clipboard) navigator.clipboard.writeText(BM_SRC).then(done,()=>{ $('impText').value=BM_SRC; }); else $('impText').value=BM_SRC; });
-  document.querySelectorAll('[data-imptab]').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('[data-imptab]').forEach(x=>x.setAttribute('aria-pressed',String(x===btn))); $('impArm').hidden=btn.dataset.imptab!=='arm'; $('impApi').hidden=btn.dataset.imptab!=='api'; }));
-  const showImp = (res) => { $('impMsg').innerHTML = `<p class="good" style="margin:6px 0 2px"><b>Загружено:</b> ${res.log.map(esc).join('; ')}.</p>` + (res.warn.length?`<p class="help" style="margin:0">Внимание: ${res.warn.map(esc).join('; ')}.</p>`:''); };
+  // import panel: file of the saved page, drag & drop, or pasted page source
+  const showImp = (res, who) => { $('impMsg').innerHTML = `<p class="good" style="margin:6px 0 2px"><b>Загружено${who?' — '+esc(who):''}:</b> ${res.log.map(esc).join('; ')}.</p>` + (res.warn.length?`<p class="help" style="margin:0">Внимание: ${res.warn.map(esc).join('; ')}.</p>`:''); };
   const impFail = msg => { $('impMsg').innerHTML = `<p class="bad" style="margin:6px 0 0">${esc(msg)}</p>`; };
-  $('impGo').addEventListener('click',()=>{ let d; try{ d=JSON.parse($('impText').value.trim()); }catch(e){ return impFail('Это не похоже на данные из Оружейной. Нажмите закладку на странице персонажа и вставьте результат сюда.'); }
-    try{ showImp(applyImport(d)); }catch(e){ impFail('Не удалось загрузить: '+e.message); } });
-  try{ $('apiKey').value = localStorage.getItem('laApiKey')||''; }catch(e){}
-  $('apiGo').addEventListener('click',async()=>{ const key=$('apiKey').value.trim(), name=$('apiName').value.trim(); if(!key||!name) return impFail('Нужны ключ API и имя персонажа.');
-    try{ if($('apiSave').checked) localStorage.setItem('laApiKey',key); else localStorage.removeItem('laApiKey'); }catch(e){}
-    $('impMsg').innerHTML='<p class="help">Загружаю…</p>';
-    try{ const r=await fetch('https://developer-lostark.game.onstove.com/armories/characters/'+encodeURIComponent(name)+'?filters=profiles+equipment+combat-skills+engravings+arkpassive',{headers:{accept:'application/json',authorization:'bearer '+key}});
-      if(r.status===401) return impFail('Ключ не подошёл (401). Проверьте ключ на developer-lostark.game.onstove.com → My Clients.');
-      if(r.status===429) return impFail('Лимит API: 100 запросов в минуту. Подождите минуту.');
-      if(!r.ok) return impFail('Ошибка API: '+r.status);
-      const a=await r.json(); if(!a) return impFail('Персонаж не найден на корейском сервере.');
-      showImp(applyImport(fromApi(a))); }catch(e){ impFail('Не удалось связаться с API: '+e.message); } });
+  function importHtml(html){
+    if(!/profile-character-info|\$\.Profile/.test(html)) return impFail('Это не страница персонажа из Оружейной. Откройте персонажа на лостарк.рф и сохраните страницу ещё раз.');
+    let d; try{ d=parseArmoryHtml(html); }catch(e){ return impFail('Не удалось прочитать страницу: '+e.message); }
+    if(!d.nodes.length && !d.eng.length) return impFail('На странице нет данных Ark Passive и гравировок. Сохраните страницу полностью («Веб-страница, только HTML»).');
+    try{ showImp(applyImport(d), d.name); }catch(e){ impFail('Не удалось загрузить: '+e.message); }
+  }
+  const readFile = f => { if(!f) return; if(f.size>15e6) return impFail('Файл слишком большой.'); const r=new FileReader(); r.onload=()=>importHtml(String(r.result)); r.onerror=()=>impFail('Не удалось прочитать файл.'); r.readAsText(f); };
+  $('impFile').addEventListener('change',()=>readFile($('impFile').files[0]));
+  const dz=$('impDrop');
+  ['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.remove('over'); }));
+  dz.addEventListener('drop',e=>readFile(e.dataTransfer.files[0]));
+  const RU_ARMORY='https://xn--80aubmleh.xn--p1ai/Profile/Character/';
+  async function importByName(){
+    const n=$('impName').value.trim(); if(!n) return impFail('Впишите ник персонажа.');
+    try{ localStorage.setItem('laNick',n); }catch(e){}
+    $('impGo').disabled=true; $('impMsg').innerHTML='<p class="help" style="margin:6px 0 0">Загружаю персонажа…</p>';
+    const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),40000);
+    try{ const get=()=>fetch('https://r.jina.ai/'+RU_ARMORY+encodeURIComponent(n),{headers:{'X-Return-Format':'html'},signal:ctl.signal});
+      let r=await get(); if(r.status===401||r.status===422||r.status>=500){ await new Promise(z=>setTimeout(z,1500)); r=await get(); }
+      if(r.status===429) return impFail('Слишком много запросов подряд. Подождите минуту и попробуйте снова.');
+      if(!r.ok) return impFail('Оружейная не ответила (код '+r.status+'). Попробуйте ещё раз чуть позже или загрузите сохранённую страницу (ниже, «Что загружается и откуда»).');
+      const html=await r.text();
+      if(!/profile-character-info/.test(html)) return impFail(`Персонаж «${n}» не найден в Оружейной лостарк.рф. Проверьте ник (регистр букв не важен).`);
+      importHtml(html);
+    }catch(e){ impFail(e.name==='AbortError'?'Оружейная долго не отвечает. Попробуйте ещё раз.':'Не удалось загрузить: '+e.message+'. Можно загрузить сохранённую страницу (ниже, «Что загружается и откуда»).'); }
+    finally{ clearTimeout(tm); $('impGo').disabled=false; }
+  }
+  $('impForm').addEventListener('submit',e=>{ e.preventDefault(); importByName(); });
+  try{ $('impName').value=localStorage.getItem('laNick')||''; }catch(e){}
   setClass(); renderTree(); recompute(); renderRef();
 })();
 

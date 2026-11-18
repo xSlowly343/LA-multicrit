@@ -257,6 +257,18 @@ body.adv .simple-only{display:none!important}
 .pathcmp{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14px;display:grid;gap:4px;margin-bottom:6px}
 .pathcmp:empty{display:none}
 .imp{padding:12px 16px}
+details.curb{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+details.curb summary{cursor:pointer;display:grid;grid-template-columns:110px 1fr auto;gap:4px 12px;align-items:baseline;list-style:none}
+details.curb summary::-webkit-details-marker{display:none}
+details.curb .cbs{font-size:13.5px}
+details.curb .cbm{color:var(--accent);font-size:13px;white-space:nowrap}
+@media (max-width:560px){details.curb summary{grid-template-columns:1fr}}
+.exw{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px 18px;margin-top:10px}
+.exg{font-size:13px}
+.cmp10{font-size:14px;margin-top:4px}
+.exh{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:2px;margin-bottom:2px}
+.exr{display:flex;justify-content:space-between;gap:8px;color:var(--muted)}
+.exr span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
 .improw{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .improw label{margin-right:4px}
 .improw input{flex:1 1 180px;min-width:0;max-width:320px;font-family:var(--f-body);font-size:15px;padding:8px 10px}
@@ -312,7 +324,7 @@ table.hm td.me{outline:2px solid var(--fg);outline-offset:-2px;font-weight:700}
 .hero .btns .primary{font-size:15px;padding:9px 16px}
 .bline{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;align-items:center;padding-top:10px;border-top:1px solid var(--line)}
 @media (max-width:560px){.bline{grid-template-columns:1fr}}
-.bline .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.bline .lbl,details.curb .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .evochips{display:flex;flex-wrap:wrap;gap:6px}
 .evochip{display:inline-flex;align-items:center;gap:6px;background:var(--tile);color:var(--tile-fg);border-radius:999px;padding:3px 10px 3px 3px;font-size:12.5px}
 .evochip .ico{width:26px;height:26px}
@@ -342,7 +354,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
 <div class="wrap">
 <header class="top">
   <div class="top-l">
-    <div class="eyebrow">Lost Ark KR · патч 18.11.2026 · версия сайта 22</div>
+    <div class="eyebrow">Lost Ark KR · патч 18.11.2026 · версия сайта 23</div>
     <h1>Мульти-крит: подбор билда</h1>
     <p class="lede">Выберите класс и пати — ниже сразу лучший билд с учётом мульти-крита.</p>
   </div>
@@ -614,6 +626,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       <label for="impName"><b>Мой персонаж</b> <span class="help">RU-сервер</span></label>
       <input type="text" id="impName" placeholder="Ник персонажа" spellcheck="false" autocapitalize="off" enterkeyhint="go">
       <button type="submit" class="primary" id="impGo">Загрузить</button>
+      <button type="button" id="impBack" hidden>Вернуть билд</button>
     </form>
     <div id="impMsg" aria-live="polite"></div>
     <details class="why"><summary>Что загружается и откуда</summary>
@@ -702,7 +715,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
         <h4>Снаряжение и прочее</h4>
         <div class="field"><label for="g_crit">Стат Crit со снаряжения</label><input type="number" id="g_crit" class="w100" min="0" max="3000" value="600"></div>
         <div class="field"><label for="g_swift">Стат Swiftness со снаряжения</label><input type="number" id="g_swift" class="w100" min="0" max="3000" value="100"></div>
-        <div class="field"><label for="g_cr">Прочий шанс крита, %</label><input type="number" id="g_cr" class="w100" min="0" max="200" step="0.1" value="7"><span class="help">Сет карт на крит (12 пробуждений) +7%, Ark Grid. По умолчанию 7%.</span></div>
+        <div class="field"><label for="g_cr">Прочий шанс крита, %</label><input type="number" id="g_cr" class="w100" min="0" max="200" step="0.1" value="0"><span class="help">Ark Grid и другое, чего нет в настройках. По умолчанию 0.</span></div>
         <div class="field"><label for="g_cd">Прочий крит. урон сверх 200%, %</label><input type="number" id="g_cd" class="w100" min="0" max="400" value="0"></div>
         <div class="field"><label for="g_evo">Прочий Evolution damage, %</label><input type="number" id="g_evo" class="w100" min="0" max="200" step="0.1" value="0"><span class="help">Ранг Karma.</span></div>
         <div class="field"><label for="g_as">Прочая скорость атаки / бега, %</label><div class="row"><input type="number" id="g_as" min="0" max="100" step="0.5" value="5" aria-label="Скорость атаки"><input type="number" id="g_ms" min="0" max="100" step="0.5" value="5" aria-label="Скорость бега"></div></div>
@@ -1150,8 +1163,9 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     $('c_emb').setAttribute('style', emb(cls.emb,34));
     $('c_classInfo').textContent = `Синергия класса: ${synTxt(cls.syn)}.` + (cls.self?` Собственный шанс крита +${cls.self}%.`:'');
     const sk=cls.sk||{mana:1,back:0,head:0,mp:480};
-    $('s_mana').checked = sk.mana>=0.5; $('s_back').checked = sk.back>=0.5; $('s_head').checked = sk.head>=0.5 && sk.back<0.5;
-    if(sk.mp) $('s_mp').value = sk.mp;
+    const own=((saved.cs3||{})[cls.id]||{}).sk; // this class's own settings (e.g. from an imported character) win over class defaults
+    $('s_mana').checked = own?own.mana:sk.mana>=0.5; $('s_back').checked = own?own.back:sk.back>=0.5; $('s_head').checked = own?own.head:(sk.head>=0.5 && sk.back<0.5);
+    if(own&&own.mp) $('s_mp').value=own.mp; else if(sk.mp) $('s_mp').value = sk.mp;
     $('mpField').hidden = !$('s_mana').checked;
     $('skInfo').textContent = `По 4 профилям ${cls.n}: ${Math.round(sk.mana*100)}% скиллов тратят ману${sk.mp?` (медиана ${sk.mp})`:''}, ${Math.round(sk.back*100)}% бьют в спину, ${Math.round(sk.head*100)}% в голову. Галочки выставлены по большинству, их можно поменять.`;
     loadClassState(); renderClassTrees(); renderClsGrid();
@@ -1160,28 +1174,36 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
 
   function saveChar(){
     const acc=SLOTS.map((sl,si)=>[0,1,2].map(li=>[$(`a${si}_${li}`).value,+$(`a${si}_${li}g`).value]));
-    saved.cs3 = saved.cs3 || {}; lvByPath[pathIdx]={...lv}; bldByPath[pathIdx]={r:{...ranks}, e:[0,1,2,3,4].map(k=>[$('e'+k).value,+$('e'+k+'l').value])}; saved.cs3[cls.id] = {p:pathIdx,l:{...lv},lp:JSON.parse(JSON.stringify(lvByPath)),bp:JSON.parse(JSON.stringify(bldByPath))};
+    saved.cs3 = saved.cs3 || {}; lvByPath[pathIdx]={...lv}; bldByPath[pathIdx]={r:{...ranks}, e:[0,1,2,3,4].map(k=>[$('e'+k).value,+$('e'+k+'l').value])}; saved.cs3[cls.id] = {p:pathIdx,l:{...lv},lp:JSON.parse(JSON.stringify(lvByPath)),bp:JSON.parse(JSON.stringify(bldByPath)),sk:{mana:$('s_mana').checked,back:$('s_back').checked,head:$('s_head').checked,mp:$('s_mp').value}};
     Object.assign(saved,{cls:cls.id,team:['c_t1','c_t2','c_t3'].map(id=>$(id).value),acc,br:['br1','br2','br3'].map(id=>$(id).value),eng:[0,1,2,3,4].map(i=>[$('e'+i).value,+$('e'+i+'l').value]),locks:[0,1,2,3,4].map(isLocked),st:[num('stA',2),num('stB',2)]});
+    saved.inp = Object.fromEntries(INP().map(i=>[i.id, i.type==='checkbox'?i.checked:i.value]));
     store.set('charState6',saved);
   }
+  const INP = () => [...document.querySelectorAll('#v-build input[id]')].filter(i=>(i.type==='number'||i.type==='checkbox') && !/^(impFile)$/.test(i.id));
+  function restoreInputs(){ const v=saved.inp||{}; INP().forEach(i=>{ if(!(i.id in v)) return; if(i.type==='checkbox') i.checked=!!v[i.id]; else i.value=v[i.id]; }); $('mpField').hidden=!$('s_mana').checked; }
 
   /* ---------- context ---------- */
   function ctxBase(brOv){
     const team=['c_t1','c_t2','c_t3'].map(id=>ALLC[$(id).value]).filter(Boolean);
     // synergies of different classes stack; the same class twice counts once
-    const syn={crit:0,cdmg:0,as:0,ms:0}, seenCls=new Set();
+    const syn={crit:0,cdmg:0,as:0,ms:0}, seenCls=new Set(), synBy=[];
     [cls,...team].forEach(c=>{ const base=c.id.replace(/^sup_/,'').replace('valk','valkyrie'); if(seenCls.has(base)) return; seenCls.add(base);
-      for(const k in syn){ syn[k]+=(c.syn&&c.syn[k])||0; } });
-    const x={C:0,D:200,R:0,evo:0,add:0,dmg:1,as:num('g_as'),ms:num('g_ms'),rc:0,aero:false,per:[]};
+      for(const k in syn){ const v=(c.syn&&c.syn[k])||0; syn[k]+=v; if(v) synBy.push([k,c.n,v]); } });
+    const x={C:0,D:200,R:0,evo:0,add:0,dmg:1,as:0,ms:0,rc:0,aero:false,per:[],src:[]};
+    const S=(k,n,v)=>{ if(!v) return; if(k==='dmg') x.dmg*=1+v/100; else x[k]+=v; x.src.push([k,n,v]); };
+    x.src.push(['D','Базовый крит. урон',200]);
     x.critStat=num('g_crit'); x.swift=num('g_swift');
     const pos=Math.max(0,Math.min(100,num('s_pos',90)))/100;
-    x.C += num('g_cr') + (cls.self||0) + ($('s_back').checked?10*pos:0) + syn.crit;
-    x.D += num('g_cd'); x.R += syn.cdmg; x.as += syn.as; x.ms += syn.ms;
+    S('C','Прочее (Ark Grid и др.)',num('g_cr')); S('C','Класс: свой бонус',cls.self||0);
+    if($('s_back').checked) S('C',`Удары в спину: +10% × ${Math.round(pos*100)}% попаданий`,10*pos);
+    const SYN={crit:'C',cdmg:'R',as:'as',ms:'ms'};
+    synBy.forEach(([k,n,v])=>S(SYN[k],'Синергия: '+n,v));
+    S('D','Прочее',num('g_cd')); S('as','Прочее',num('g_as')); S('ms','Прочее',num('g_ms'));
     const hasSup = team.some(c=>c.id.startsWith('sup_'));
-    x.evo += num('g_evo') + ($('c_dance').checked && hasSup ? 14 : 0);
-    SLOTS.forEach((sl,si)=>[0,1,2].forEach(li=>{ const o=ACCOPT[$(`a${si}_${li}`).value]; const n=o.v[+$(`a${si}_${li}g`).value]||0; if(o.k==='C')x.C+=n; else if(o.k==='D')x.D+=n; else if(o.k==='add')x.add+=n; else if(o.k==='dmg')x.dmg*=1+n/100; }));
-    (brOv||['br1','br2','br3'].map(id=>$(id).value)).forEach(v=>{ const b=BRACE.find(o=>o.v===v); if(!b) return; x.C+=b.C||0; x.D+=b.D||0; x.R+=b.R||0; x.add+=b.add||0; if(b.dmg) x.dmg*=1+b.dmg/100; });
-    [...cls.enl,...cls.leap].forEach(n=>{ const e=effAt(n, lv[n.k]||0); if(!e) return; x.C+=e.C||0; x.D+=e.D||0; x.as+=e.as||0; x.ms+=e.ms||0; if(e.dmg) x.dmg*=1+e.dmg/100; if(e.per) x.per.push(e.per); if(e.aero) x.aero=true; });
+    S('evo','Прочее',num('g_evo')); if($('c_dance').checked && hasSup) S('evo','Passionate Dance саппорта',14);
+    SLOTS.forEach((sl,si)=>[0,1,2].forEach(li=>{ const o=ACCOPT[$(`a${si}_${li}`).value]; const n=o.v[+$(`a${si}_${li}g`).value]||0; const K={C:'C',D:'D',add:'add',dmg:'dmg'}[o.k]; if(K) S(K,`${sl.n}: ${o.n}`,n); }));
+    (brOv||['br1','br2','br3'].map(id=>$(id).value)).forEach(v=>{ const bb=BRACE.find(o=>o.v===v); if(!bb||!bb.v) return; const n='Браслет: '+bb.n.split(' ·')[0]; S('C',n,bb.C||0); S('D',n,bb.D||0); S('R',n,bb.R||0); S('add',n,bb.add||0); S('dmg',n,bb.dmg||0); });
+    [...cls.enl,...cls.leap].forEach(nd=>{ const ef=effAt(nd, lv[nd.k]||0); if(!ef) return; const n='Узел класса: '+nd.n; S('C',n,ef.C||0); S('D',n,ef.D||0); S('as',n,ef.as||0); S('ms',n,ef.ms||0); S('dmg',n,ef.dmg||0); if(ef.per) x.per.push({...ef.per,n:nd.n}); if(ef.aero) x.aero=true; });
     x.skills = skList(); x.partW = Math.max(0,Math.min(100,num('s_part',50)))/100;
     x.dir=$('s_dir').checked; x.mana=$('s_mana').checked; x.mp=num('s_mp'); x.stk=Math.min(6,num('s_stk',6)); x.mst=Math.min(5,num('s_mst',5)); x.cdrW=num('s_cdr');
     x.syn=syn; x.pos=pos; x.back=$('s_back').checked; x.head=$('s_head').checked; x.charge=$('s_charge').checked; x.hold=$('s_hold').checked;
@@ -1294,6 +1316,10 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       else if(tipW.length){ tipW.forEach(s=>s.w=0.02); }
       const rest=own.filter(s=>!s.wsrc); rest.forEach(s=>s.w = refW.length||tipW.length ? 0.02 : 1/own.length);
       const t=own.reduce((a,s)=>a+s.w,0)||1; own.forEach(s=>s.w/=t);
+      const wb=own.filter(s=>s.at==='back').reduce((a,s)=>a+s.w,0), wh=own.filter(s=>s.at==='head').reduce((a,s)=>a+s.w,0);
+      $('s_back').checked = wb>=0.5; $('s_head').checked = wh>=0.5 && wb<0.5;
+      const manaC=(d.skills||[]).filter(s=>lvOf(s)>=10).map(s=>intR(((s.c||'').match(/(?:마나|маны:?)\s*([\d\s]+)/i)||[])[1]||'')).filter(Boolean).sort((p,q)=>p-q);
+      $('s_mana').checked = manaC.length>0; if(manaC.length) $('s_mp').value=manaC[Math.floor(manaC.length/2)]; $('mpField').hidden=!$('s_mana').checked;
       skCustom[cls.id+':'+pathIdx]=own; store.set('skCustom1',skCustom); delete skOv[cls.id+':'+pathIdx]; store.set('skOv1',skOv); skKey='';
       log.push(`скиллы: ${own.length} (уровень 10+), крит из трайподов: ${own.filter(s=>s.eff.length).length}`);
     }
@@ -1322,21 +1348,39 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   const curEng = () => [0,1,2,3,4].map(i=>[$('e'+i).value,+$('e'+i+'l').value]);
   function engApplies(e,x){ const c=e.cond; if(!c) return true; if(c==='never') return false; if(c==='front') return !x.back && !x.head; if(c==='charge') return x.charge; if(c==='hold') return x.hold; if(c==='mana') return x.mana; return true; }
   function withEng(x0, list){
-    const x={...x0, per:[...x0.per]}; const seen=new Set();
+    const x={...x0, per:[...x0.per]}; const seen=new Set(); const tr=!!x0.src; if(tr) x.src=[...x0.src];
+    const S=(k,n,v)=>{ if(!v) return; if(k==='dmg') x.dmg*=1+v/100; else x[k]+=v; if(tr) x.src.push([k,n,v]); };
     list.forEach(([id,l])=>{ const e=ENGBY[id]; if(!e||!e.id||seen.has(e.id)) return; seen.add(e.id); const v=e.lv[l]||0;
       if(!engApplies(e,x)) return;
-      if(e.t==='dmg') x.dmg*=1+v/100;
-      if(e.t==='D') { x.D+=v; x.dmg*=1-0.2*0.10; }
-      if(e.t==='adr'){ x.C+=20; x.dmg*=1+6*v/100; }
-      if(e.t==='pd'){ x.C+=v; x.D-=6; }
-      if(e.t==='ambush') x.dmg*=(1+v/100)*(x.back?1+0.15*x.pos:1);
-      if(e.t==='brawler') x.dmg*=(1+v/100)*(x.head?1+0.15*x.pos:1);
-      if(e.t==='raid') x.rc=v;
-      if(e.t==='mana') x.dmg*=1+v/100;
-      if(e.t==='speed'){ x.as+=v; x.ms+=v; }
-      if(e.as) x.as+=e.as;
+      const n='Гравировка: '+e.n.split(' — ')[0]+(l?' Ф'+l:'');
+      if(e.t==='dmg'||e.t==='mana') S('dmg',n,v);
+      if(e.t==='D') { S('D',n,v); S('dmg',n+' (10% ударов −20%)',-2); }
+      if(e.t==='adr'){ S('C',n,20); S('dmg',n+' (атака)',6*v); }
+      if(e.t==='pd'){ S('C',n,v); S('D',n,-6); }
+      if(e.t==='ambush'){ S('dmg',n,v); if(x.back) S('dmg',n+' (спина)',15*x.pos); }
+      if(e.t==='brawler'){ S('dmg',n,v); if(x.head) S('dmg',n+' (голова)',15*x.pos); }
+      if(e.t==='raid'){ x.rc=v; if(tr) x.src.push(['rc',n,v]); }
+      if(e.t==='speed'){ S('as',n,v); S('ms',n,v); }
+      if(e.as) S('as',n,e.as);
     });
     return x;
+  }
+  // labelled breakdown of one evaluation (same formulas as evaluate; the test checks that the sums match)
+  function explain(r, x, B){
+    const g=id=>r[id]||0, N=id=>BYID[id].n+(BYID[id].max>1?' '+g(id):''), out={C:[],D:[],R:[],evo:[],add:[],dmg:[],as:[],ms:[]};
+    const P=(k,n,v)=>{ if(v) out[k].push([n,v]); };
+    P('C',`Смертоносность ${Math.round(B.critStat)}${g('crit')?` (снаряжение ${Math.round(x.critStat)} + Ark Passive ${50*g('crit')})`:''}`,B.critStat*CRIT_PT);
+    x.src.forEach(([k,n,v])=>{ if(out[k]) out[k].push([n,v]); });
+    const sw=(x.swift+50*g('swift'))*SWIFT_PT; P('as',`Сноровка ${Math.round(x.swift+50*g('swift'))}`,sw); P('ms',`Сноровка ${Math.round(x.swift+50*g('swift'))}`,sw);
+    ['charger','goddess','advance'].forEach(id=>{ const v={charger:4,goddess:3,advance:4}[id]*g(id); if(g(id)){ P('as',N(id),v); if(id!=='charger') P('ms',N(id),v); } });
+    P('C',N('keen'),4*g('keen')); P('C',N('zealous'),12*g('zealous')); P('C',N('strike'),10*g('strike')); if(g('master')) P('C',`Master (${x.mst} стаков)`,1.4*x.mst); if(x.aero) P('C','Aeromancer: скорость бега × 0.3',0.3*B.ms);
+    if(x.dir) P('D',N('strike')+' (directional)',16*g('strike')); if(x.aero) P('D','Aeromancer: скорость атаки × 1.2',1.2*B.as);
+    P('R',N('critical'),12*g('critical'));
+    [['illicit',5],['keen',5],['limit',10],['optim',5],['unlim',8],['zealous',2],['charger',12],['timing',8],['dance',7],['pulver',20]].forEach(([id,k])=>P('evo',N(id),k*g(id)));
+    if(x.mana) P('evo',N('illicit')+' (мана-скиллы)',5*g('illicit'));
+    if(B.e5) P('evo',B.t5==='bt'?`${N('bt')}: шанс сверх 80% → Evolution`:N(B.t5),B.e5);
+    if(g('master')) P('add',`Master (${x.mst} стаков)`,1.7*x.mst);
+    return out;
   }
   const topLv = e => e.lv.reduce((a,v,k)=>v!==null?k:a,0);
   function evaluate(r, x, cOver){
@@ -1552,7 +1596,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     // +10% crit chance vs +10% crit damage, same build
     const totX = x => evaluate(evoBest.r, x).core*x.dmg;
     const g10C = totX({...bestX, C:bestX.C+10})/bestTot-1, g10D = totX({...bestX, D:bestX.D+10})/bestTot-1;
-    const cmp10 = `<div class="bline"><span class="lbl">Что качать</span><div>+10% шанса крита: <b>${sign(g10C)}</b> · +10% крит. урона: <b>${sign(g10D)}</b> → выгоднее <b>${Math.abs(g10C-g10D)<0.0005?'одинаково':(g10C>g10D?'шанс крита':'крит. урон')}</b>. <span class="help">${evoBest.ev.t5==='bt'?'С Blunt Thorn шанс выше 80% идёт в Evolution (×1.4).':'Каждый 1% шанса сверх 100% добавляет мульти-крит.'}</span></div></div>`;
+    const cmp10 = `<div class="cmp10">Что качать: +10% шанса <b>${sign(g10C)}</b> · +10% крит. урона <b>${sign(g10D)}</b> → выгоднее <b>${Math.abs(g10C-g10D)<0.0005?'одинаково':(g10C>g10D?'шанс крита':'крит. урон')}</b></div>`;
     // Evermind-style grid: Blunt Thorn vs the best other Tier 5 at each crit chance × crit damage
     const hmC=[80,90,100,110,120,130,140,150,160,170,180,190,200], hmD=[200,220,240,260,280,300,320,340,360,380,400];
     const nearC=hmC.reduce((a,v)=>Math.abs(v-bev.C)<Math.abs(a-bev.C)?v:a), nearD=hmD.reduce((a,v)=>Math.abs(v-bev.D)<Math.abs(a-bev.D)?v:a);
@@ -1571,11 +1615,12 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
         <div class="btns">${isBest?'':'<button type="button" class="primary" id="applyAll">Применить всё</button>'}<button type="button" id="copyBuild">Скопировать билд</button></div>
       </div>
       ${lastChange}
+      ${curBuildHtml(B, X, cur, ar)}
       ${pathRes.filter(r=>r!==win).map(r=>{ const d=r.tot/win.tot-1; return `<div class="bline other"><span class="lbl">Другой путь</span><div><b>${esc(r.n)}</b> с его лучшим билдом: <b class="${d>0?'good':'bad'}">${sign(d)}</b> к лучшему билду ${esc(win.n)} <span class="help">· ${esc(label(r.evoBest.d))} · ${r.eng.res[0].list.map(e=>esc(ENGBY[e[0]].n.split(' — ')[0])).join(', ')}</span> <button type="button" data-gopath="${r.i}">Перейти на этот путь</button></div></div>`; }).join('')}
       <div class="bline"><span class="lbl">Evolution</span><div class="evochips">${evoChips(evoBest.r)}<button type="button" id="applyEvo" class="adv-only">Применить</button></div></div>
       <div class="bline"><span class="lbl">Гравировки</span><div><div class="engchips">${engChips}</div><button type="button" id="applyEng" class="adv-only" style="margin-top:6px">Применить</button></div></div>
       <div class="bline"><span class="lbl">Крит</span><div class="verdict">${btVerdict}. <span class="help">Шанс крита ${bev.C.toFixed(0)}%, крит. урон ${bev.D.toFixed(0)}%${evoBest.ev.t5==='bt'?'':`, мульти-крит у ${pct(bev.mc,0)} ударов${bestX.skills?' (среднее по скиллам)':''}`}.</span>
-        <details class="why"><summary>Когда это изменится? Таблица BT против мульти-крита</summary>${thrHtml}</details></div></div>${cmp10}`;
+        ${cmp10}<details class="why"><summary>Когда это изменится? Таблица BT против мульти-крита</summary>${thrHtml}</details></div></div>`;
     $('answer').querySelectorAll('[data-gopath]').forEach(btn=>btn.addEventListener('click',()=>{ const r=pathRes.find(x=>x.i===+btn.dataset.gopath); switchPath(r.i); ranks={...r.evoBest.r}; store.set('apRanks3',ranks); renderTree(); applyEngSet(r.eng.freeIdx, r.eng.res[0].set); }));
     const summary = [`${cls.n}${cls.paths.length?' — путь '+win.n:''}`,
       `Evolution: T5 ${label(evoBest.d)}; T4 ${label(evoBest.c)}; T3 ${label(evoBest.b)}; T2 ${label(evoBest.a)}`,
@@ -1606,6 +1651,19 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     $('sumSk').textContent = [ $('s_mana').checked?'мана':'без маны', $('s_back').checked?'в спину':'', $('s_head').checked?'в голову':'' ].filter(Boolean).join(' · ');
     if($('link').checked && B){ setPair('cr','crN',Math.min(B.ce,500).toFixed(1)); setPair('cd','cdN',B.D.toFixed(0)); setPair('rr','rrN',((B.R-1)*100).toFixed(1)); }
   }
+  function curBuildHtml(B, X, cur, ar){
+    const ex=explain(ar, X, B); const f=v=>(Math.abs(v)<10?v.toFixed(2):v.toFixed(1)).replace(/\.?0+$/,'');
+    const grp=(t,k,tot,unit='%')=>{ const rows=ex[k]; if(!rows.length) return ''; return `<div class="exg"><div class="exh"><b>${t}</b><b>${k==='dmg'?'×'+X.dmg.toFixed(3):f(tot)+unit}</b></div>${rows.map(([n,v])=>`<div class="exr"><span>${esc(n)}</span><span>${v>0?'+':''}${f(v)}${unit}</span></div>`).join('')}</div>`; };
+    const dmgTot=(X.dmg-1)*100;
+    const sk = X.skills ? `<p class="help" style="margin:6px 0 0">Шанс и крит. урон выше — общие. Свои бонусы у скиллов (трайпод «крит +X%») и доли урона — в «Скиллы»; ${B.t5==='bt'?'с Blunt Thorn мульти-крита нет (шанс ограничен 80%)':'мульти-крит в среднем у '+pct(B.mc,0)+' ударов'}.</p>` : '';
+    const t5n = B.t5?N5(B.t5):'нет узла Tier 5';
+    const eng = cur.filter(e=>e[0]).map(([id,l])=>esc(ENGBY[id].n.split(' — ')[0])+(l?' Ф'+l:'')).join(', ')||'нет гравировок';
+    const snap=store.get('impSnap');
+    return `<details class="curb"><summary><span class="lbl">Ваш билд</span><span class="cbs">${esc(cls.n)}${cls.paths.length?' · '+esc(cls.paths[pathIdx].n):''} · ${esc(t5n)} · ${eng} · шанс ${B.C.toFixed(1)}% · крит. урон ${B.D.toFixed(0)}%${snap&&snap.cls===cls.id?' · <span class="tag">'+esc(snap.name)+'</span>':''}</span><span class="cbm">От чего рассчитано ▾</span></summary>
+      <div class="exw">${grp('Шанс крита','C',B.C)}${grp('Крит. урон','D',B.D)}${grp('Урон при крите (on Critical Hit)','R',(B.R-1)*100)}${grp('Evolution damage','evo',B.evo)}${grp('Доп. урон','add',B.add)}${grp('Урон — множители перемножаются','dmg',dmgTot)}${grp('Скорость атаки','as',B.as)}${grp('Скорость бега','ms',B.ms)}</div>
+      <p class="help" style="margin:6px 0 0">Итог: крит-множитель ×${B.m.toFixed(3)} · Evolution ×${(1+B.evo/100).toFixed(3)} · доп. урон ×${(1+B.add/100).toFixed(3)} · урон ×${X.dmg.toFixed(3)}${X.rc?` · Raid Captain ×${(1+X.rc/100*Math.max(0,B.ms)/100).toFixed(3)}`:''}. Поля — в «Подробно» и в карточках настроек ниже.</p>${sk}</details>`;
+  }
+  const N5 = id => ({bt:'Blunt Thorn',ss:'Supersonic Breakthrough',si:'Standing Striker',mf:'MP Furnace'})[id]+' 2';
   const evoChips = r => Object.entries(r).filter(([k,v])=>v>0 && BYID[k] && BYID[k].t>=2).sort((p,q)=>BYID[q[0]].t-BYID[p[0]].t).map(([k,v])=>`<span class="evochip" title="${esc(BYID[k].d)}">${ico(BYID[k].ic,26)}${esc(BYID[k].n)}${BYID[k].max>1?` <b>${v}</b>`:''}</span>`).join('');
   function renderSupport(cur, ar){
     const sw = SUP_T5[cls.id]||'si';
@@ -1613,6 +1671,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const same = ['goddess','dance','lumin','prayer',sw].every(k=>(ranks[k]||0)===supR[k]);
     const dpsI = cls.paths.findIndex(p=>p.role==='dps');
     $('answer').innerHTML = `
+      ${curBuildHtml(evaluate(ar,X), X, cur, ar)}
       <div class="hero"><div class="gain">Путь саппорта<small>${esc(cls.paths[pathIdx].n)} — урон для этого пути не подбирается</small></div>
         <div class="btns">${same?'':'<button type="button" class="primary" id="applySup">Поставить билд саппорта</button>'}${dpsI>=0?`<button type="button" id="goDps">Перейти на ДД-путь (${esc(cls.paths[dpsI].n)})</button>`:''}</div></div>
       <div class="bline"><span class="lbl">Evolution</span><div class="evochips">${evoChips(supR)}</div></div>
@@ -1713,10 +1772,10 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     if(!/profile-character-info|\$\.Profile/.test(html)) return impFail('Это не страница персонажа из Оружейной. Откройте персонажа на лостарк.рф и сохраните страницу ещё раз.');
     let d; try{ d=parseArmoryHtml(html); }catch(e){ return impFail('Не удалось прочитать страницу: '+e.message); }
     if(!d.nodes.length && !d.eng.length) return impFail('На странице нет данных Ark Passive и гравировок. Сохраните страницу полностью («Веб-страница, только HTML»).');
-    try{ showImp(applyImport(d), d.name); }catch(e){ impFail('Не удалось загрузить: '+e.message); }
+    try{ const res=applyImport(d); store.set('impSnap',{name:d.name||$('impName').value.trim(),cls:cls.id,d}); showImp(res, d.name); updSnapBtn(); recompute(); }catch(e){ impFail('Не удалось загрузить: '+e.message); }
   }
   const readFile = f => { if(!f) return; if(f.size>15e6) return impFail('Файл слишком большой.'); const r=new FileReader(); r.onload=()=>importHtml(String(r.result)); r.onerror=()=>impFail('Не удалось прочитать файл.'); r.readAsText(f); };
-  $('impFile').addEventListener('change',()=>readFile($('impFile').files[0]));
+  $('impFile').addEventListener('change',()=>{ readFile($('impFile').files[0]); $('impFile').value=''; });
   const dz=$('impDrop');
   ['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.add('over'); }));
   ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.remove('over'); }));
@@ -1737,9 +1796,12 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     }catch(e){ impFail(e.name==='AbortError'?'Оружейная долго не отвечает. Попробуйте ещё раз.':'Не удалось загрузить: '+e.message+'. Можно загрузить сохранённую страницу (ниже, «Что загружается и откуда»).'); }
     finally{ clearTimeout(tm); $('impGo').disabled=false; }
   }
+  function updSnapBtn(){ const sn=store.get('impSnap'); $('impBack').hidden=!sn; if(sn) $('impBack').textContent='Вернуть билд '+sn.name; }
+  $('impBack').addEventListener('click',()=>{ const sn=store.get('impSnap'); if(!sn) return; try{ showImp(applyImport(sn.d), sn.name+' (сохранённые данные)'); }catch(e){ impFail('Не удалось вернуть: '+e.message); } });
+  updSnapBtn();
   $('impForm').addEventListener('submit',e=>{ e.preventDefault(); importByName(); });
   try{ $('impName').value=localStorage.getItem('laNick')||''; }catch(e){}
-  setClass(); renderTree(); recompute(); renderRef();
+  setClass(); restoreInputs(); renderTree(); recompute(); renderRef();
 })();
 
 </script>

@@ -941,6 +941,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       <li><span class="tag hyp">?</span>«Урон при критическом ударе» ядра Солнца Хаоса складывается с узлом Critical и браслетом и действует один раз при мульти-крите — по одинаковой формулировке в KR-подсказках и формуле Inven (회심 применяется один раз); прямого подтверждения в патчноуте нет.</li>
       <li><span class="tag hyp">?</span>Урон, урон по боссам ядер и рунитов — отдельные множители (так считают расчёты на Inven); доп. урон складывается с остальным доп. уроном. Сила атаки % на деле складывается с другими % силы атаки, поэтому сайт её немного завышает; на сравнение вариантов билда это не влияет.</li>
       <li><span class="tag hyp">?</span>Ожог Луны Хаоса (огонь по боссам) — около 0.5% урона, на 17 оч. ×2 у реликвии и ×2.5 у древнего; оценка по таблицам прироста от ядер на Inven (ожог ≈ 60/74% кровотечения). Считается как урон без крита.</li>
+      <li><span class="tag hyp">?</span>Ядра Порядка: учитываются только крит. урон и шанс крита названных скиллов («…»), в том числе на время «Предназначения»; эффекты для группы скиллов («элементальных умений», «умений стойки») и общие баффы «Предназначения» не учитываются. Урон оружия % из ядра Звезды Хаоса считается как половина такой же силы атаки (сила атаки растёт как корень из урона оружия). Тексты ядер Хаоса сверены с Оружейной лостарк.рф (50 персонажей из рейтинга mokitoki.ru).</li>
       <li><span class="tag hyp">?</span>Складывается ли «урон при крите» ядра с узлом Critical или перемножается, на Inven считают по-разному; разница меньше 0.03% урона, сайт складывает.</li>
     </ul>
   </section>
@@ -1419,21 +1420,29 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       const effT=((t.split(/(?:Эффект ядра|코어 옵션) \| /)[1]||'').split(' | ')[0]);
       const parts=effT.split(/\[(\d+)\s*(?:оч\.|P)\]/); const act=[], fx={R:0,dmg:0,atk:0,C:0,D:0,add:0,as:0}; let burn=0, burnInc=0;
       for(let i=1;i<parts.length;i+=2){ const thr=+parts[i], txt=parts[i+1].trim(); if(thr>Math.min(pts,cap)) continue; act.push([thr,txt]);
+        const timed=/«Предназначение:|'운명:|‘운명:/.test(txt); // a temporary «Предназначение: …» buff: only its named skills count
         txt.split(/\.\s|;|, а |, но |하지만|하고,|고,/).forEach(pt=>{
           // Chaos Moon burn (DoT on bosses): ≈0.5% of damage, +100% (Relic) / +150% (Ancient) at 17 points — estimate from Inven core tables
           if(/ожог|화상/i.test(pt)){ const inc=(pt.match(/(?:ожога|화상의 피해량이)[^%\d]*?([\d.,]+)\s*%/)||[])[1]; if(inc) burnInc=num(inc); else burn=0.5; return; }
           const neg=/уменьшается|снижается|감소/.test(pt);
-          const v=num((pt.match(/(?:повышается|увеличивается|уменьшается|снижается|ещё|еще)[^%\d]*?([\d.,]+)\s*%/)||pt.match(/([\d.,]+)\s*%\s*(?:추가로\s*)?(?:증가|감소)/)||[])[1]);
+          const v=num((pt.match(/(?:повышается|увеличивается|уменьшается|снижается|ещё|еще)[^%\d]*?([\d.,]+)\s*%/)||pt.match(/([\d.,]+)\s*%\s*(?:추가로\s*)?(?:증가|감소)/)||pt.match(/[–—-]\s*на\s*([\d.,]+)\s*%/)||[])[1]);
           if(!v || /в течение|초 동안|сек\./.test(pt) && !/«/.test(pt)) return;
-          const sg=neg?-1:1, names=[...pt.matchAll(/«([^»]+)»/g)].map(m=>m[1]);
+          const sg=neg?-1:1, names=[...pt.matchAll(/«([^»]+)»/g)].map(m=>m[1]).filter(x=>!/^Предназначение|^운명/.test(x));
+          if(timed && !names.length && !/ожог|화상/i.test(pt)) return;
+          // a skill group without named skills («элементальных умений», «умений стойки», «집중 스킬») cannot be matched to skills — skip
+          if(!names.length && /умени|스킬/i.test(pt)) return;
           if(/урон, наносимый критическими ударами|치명타 시 적에게 주는 피해/i.test(pt)) fx.R+=sg*v;
-          else if(names.length && /Критический урон|Шанс критического удара/i.test(pt)) perSkill.push({names, C:/Шанс/i.test(pt)?sg*v:0, D:/Критический урон/i.test(pt)?sg*v:0, core:name});
+          else if(names.length && /Критический урон|Шанс критического удара/i.test(pt)) (()=>{ // «эффект … усиливается» restates the buff at a higher value: replace the earlier one
+            if(/усиливается|강화/.test(txt)) for(let q=perSkill.length-1;q>=0;q--){ const o=perSkill[q]; if(o.core===name && o.names.join()===names.join() && (!!o.C)===/Шанс/i.test(pt)) perSkill.splice(q,1); }
+          })(), perSkill.push({names, C:/Шанс/i.test(pt)?sg*v:0, D:/Критический урон/i.test(pt)?sg*v:0, core:name});
           else if(/^\s*(?:Наносимый урон|Урон по противникам типа|적에게 주는 피해|보스)/i.test(pt)) fx.dmg+=sg*v;
           else if(/^\s*(?:Сила атаки повышается|공격력이)/.test(pt) && /%/.test(pt)) fx.atk+=sg*v;
           else if(/^\s*(?:Шанс критического удара повышается|치명타 적중률이)/i.test(pt)) fx.C+=sg*v;
-          else if(/^\s*(?:Критический урон (?:дополнительно )?повышается|치명타 피해가)/i.test(pt)) fx.D+=sg*v;
-          else if(/^\s*(?:Дополнительный урон (?:дополнительно )?повышается|Доп\. урон|추가 피해가)/i.test(pt)) fx.add+=sg*v;
-          else if(/^\s*(?:Скорость атаки (?:дополнительно )?повышается|공격 속도가)/i.test(pt)) fx.as+=sg*v; }); }
+          else if(/^\s*(?:Критический урон|치명타 피해가)/i.test(pt)) fx.D+=sg*v;
+          else if(/^\s*(?:Дополнительный урон|Доп\. урон|추가 피해가)/i.test(pt)) fx.add+=sg*v;
+          else if(/^\s*(?:Скорость атаки|공격 속도가)/i.test(pt)) fx.as+=sg*v;
+          // weapon power % feeds attack power through a square root, so it adds about half as much attack
+          else if(/^\s*(?:Урон оружия повышается|무기 공격력이)/i.test(pt) && /%/.test(pt)) fx.atk+=sg*v/2; }); }
       if(burn) fx.dmg+=burn*(1+burnInc/100);
       ['R','dmg','atk','C','D','as'].forEach(q=>tot[q]+=fx[q]); tot.add+=fx.add;
       cores.push({name, type, grade, ic, pts, act, fx, gems:gems.length, capW, usedW, offG}); });

@@ -352,6 +352,65 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
 .role.dps{background:var(--accent-soft);color:var(--accent)}
 .role.sup{background:var(--surface2);color:var(--evo)}
 .seg button[aria-pressed="true"] .role{background:rgba(255,255,255,.25);color:inherit}
+/* v25: icons, colour-coded stats, compact build cards */
+:root{--c-cr:#B45309;--c-cd:#C2410C;--c-r:#3B57C9;--c-evo:#1F8A6B;--c-add:#9B3FB5;--c-dmg:#0E7FA6;--c-spd:#0F766E;--good-bg:#DDF3EA;--bad-bg:#FBE1DD}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-cr:#F0A445;--c-cd:#FF8A5B;--c-r:#8EA2FF;--c-evo:#4FD1A5;--c-add:#D490F0;--c-dmg:#5CC8F0;--c-spd:#5EEAD4;--good-bg:#12352A;--bad-bg:#3D1C19}}
+:root[data-theme="dark"]{--c-cr:#F0A445;--c-cd:#FF8A5B;--c-r:#8EA2FF;--c-evo:#4FD1A5;--c-add:#D490F0;--c-dmg:#5CC8F0;--c-spd:#5EEAD4;--good-bg:#12352A;--bad-bg:#3D1C19}
+header.top h1{background:linear-gradient(90deg,var(--accent),var(--para) 55%,var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
+.eic{display:inline-block;width:36px;height:36px;border-radius:8px;background-image:url(engravings.png);background-color:var(--tile);flex:none}
+.ib{position:relative;display:inline-flex;flex:none;line-height:0}
+.ib>em{position:absolute;right:-5px;bottom:-5px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--tile);color:var(--tile-on);font:600 11px/16px var(--f-mono);font-style:normal;text-align:center;border:1px solid rgba(233,226,207,.35)}
+.ib>em.st{left:-5px;right:auto;color:var(--enl)}
+.ib>i{position:absolute;top:-6px;right:-6px;width:17px;height:17px;border-radius:50%;font:700 12px/17px var(--f-body);font-style:normal;text-align:center;color:#fff;box-shadow:0 0 0 2px var(--surface)}
+.ib>i.ok{background:var(--evo)} .ib>i.chg{background:var(--sky)} .ib>i.add{background:var(--accent)} .ib>i.del{background:var(--bad)}
+.ib.gone{opacity:.5;filter:grayscale(.85)}
+.icons{display:flex;flex-wrap:wrap;gap:12px;align-items:center;min-height:36px}
+.icons .sep{width:1px;align-self:stretch;background:var(--line)}
+.icons .none{font-size:13px;color:var(--muted);line-height:1.3}
+.stiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.stile{--c:var(--accent);border-radius:10px;padding:7px 11px;background:color-mix(in srgb,var(--c) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 35%,transparent);min-width:0}
+.stile span{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.stile b{display:block;font:700 19px/1.25 var(--f-display);color:var(--c);font-variant-numeric:tabular-nums}
+.stile svg{width:14px;height:14px;fill:var(--c);flex:none}
+.card2{display:grid;gap:12px}
+.card2+.card2{border-top:1px solid var(--line);padding-top:14px}
+.chead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chead h3{font-size:16px}
+.chead .emb{width:32px;height:32px}
+.chead .tag{font-size:11px}
+.calcfrom summary{cursor:pointer;color:var(--accent);font-size:13.5px;font-weight:600}
+.calcfrom .exw{margin-top:8px}
+.exg{--c:var(--accent);border-left:3px solid var(--c);padding-left:10px;background:color-mix(in srgb,var(--c) 6%,transparent);border-radius:0 8px 8px 0;padding:6px 10px}
+.exg .exh b{color:var(--c)}
+.exr .p{color:var(--evo)} .exr .m{color:var(--bad)}
+table.cmpT{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+table.cmpT th{font-size:11px;padding:4px 8px;border-bottom:1px solid var(--line)}
+table.cmpT td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.cmpT td.lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;width:1%;white-space:nowrap}
+table.cmpT th.ok{color:var(--evo)} table.cmpT th.add{color:var(--accent)} table.cmpT th.del{color:var(--bad)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}
+.legend b{display:inline-block;width:14px;height:14px;border-radius:50%;color:#fff;font:700 10px/14px var(--f-body);text-align:center;margin-right:4px;vertical-align:-2px}
+.vs{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14.5px}
+.vs .ib .ico{border:2px solid var(--line)} .vs .win .ico{border-color:var(--evo);box-shadow:0 0 10px color-mix(in srgb,var(--evo) 45%,transparent)}
+.vs .lose{opacity:.55}
+.bars2{display:grid;gap:5px;font-size:13px}
+.bars2 div{display:grid;grid-template-columns:150px 1fr 64px;gap:8px;align-items:center}
+.bars2 .bar i{background:var(--c,var(--accent))}
+.bars2 .win{font-weight:600}
+.bars2 svg,.vs svg{width:14px;height:14px;fill:var(--c);flex:none}
+.bars2 .win b{color:var(--evo)}
+@media (max-width:520px){.bars2 div{grid-template-columns:110px 1fr 58px}}
+td.hv{font-family:var(--f-mono);white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+.okline{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:15px}
+.okline .emb{width:28px;height:28px}
+.okline b{font-family:var(--f-display)}
+.pm{display:flex;align-items:center;gap:6px;flex:1;min-width:150px}
+.pm .emb{width:28px;height:28px}
+.pm select{flex:1}
+.party2{display:flex;flex-wrap:wrap;gap:8px}
+.t5t td{vertical-align:middle}
+ul.thr{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px;font-size:14.5px}
+ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -359,7 +418,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
 <div class="wrap">
 <header class="top">
   <div class="top-l">
-    <div class="eyebrow">Lost Ark KR · патч 18.11.2026 · версия сайта 24</div>
+    <div class="eyebrow">Lost Ark KR · патч 18.11.2026 · версия сайта 25</div>
     <h1>Мульти-крит: подбор билда</h1>
     <p class="lede">Выберите класс и пати — ниже сразу лучший билд с учётом мульти-крита.</p>
   </div>
@@ -598,6 +657,16 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
           <div class="row" style="flex-wrap:wrap"><button type="button" class="primary" id="simBtn">Симулировать 10 000 ударов</button><span id="simOut" class="mono" style="font-size:13px">Случайный бой против формулы.</span></div>
         </div>
         <div class="panel"><h3>Что даст больше</h3><div class="cmp" id="synCmp"></div></div>
+        <div class="panel"><h3>Какой узел 5 тира выбрать</h3>
+          <div class="row" style="flex-wrap:wrap;gap:8px 14px;font-size:13px;margin-bottom:10px">
+            <label class="row" style="gap:6px">Evolution без 5 тира, %<input type="number" id="t5evo" min="0" max="300" step="0.5" value="70"></label>
+            <label class="row" style="gap:6px">Скорость атаки / бега, +%<input type="number" id="t5as" min="0" max="100" step="0.5" value="40" aria-label="Скорость атаки"><input type="number" id="t5ms" min="0" max="100" step="0.5" value="40" aria-label="Скорость бега"></label>
+            <label class="row" style="gap:6px">Мана скилла<input type="number" id="t5mp" min="0" max="2000" step="10" value="0"></label>
+            <label class="row" style="gap:6px">Стаки Standing Striker<input type="number" id="t5stk" min="0" max="6" step="1" value="6"></label>
+          </div>
+          <div class="tablewrap" style="border:0"><table class="t5t"><thead><tr><th>Узел (Lv.2)</th><th>Шанс в расчёте</th><th>Мульти-крит</th><th>Evolution</th><th>Итог</th><th>К лучшему</th></tr></thead><tbody id="t5calc"></tbody></table></div>
+          <p class="help" id="t5calcNote" style="margin:8px 0 0"></p>
+        </div>
         <div class="panel"><h3>Особые режимы при этих статах</h3><div class="kpis" id="specOut"></div></div>
       </div>
     </div>
@@ -611,31 +680,32 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     <p>Выберите класс и группу — справа сразу появится лучший билд Evolution и лучший набор гравировок. Закреплённые замком гравировки не меняются. Бижутерия, браслет, снаряжение и полные деревья Ark Passive — в разделе «Подробно» ниже.</p>
   </section>
   <div class="panel sbar" id="quickPanel">
-    <div class="sbar-row">
-      <button type="button" id="clsToggle" class="clspick" aria-expanded="false" aria-controls="clsGrid" title="Сменить класс"><span class="emb" id="c_emb"></span><span id="clsName"></span><span class="caret" aria-hidden="true">▾</span></button>
-      <select id="c_class" aria-label="Класс" hidden></select>
-      <div class="seg" id="q_paths" role="group" aria-label="Путь Enlightenment"></div>
-      <div class="party"><span class="plabel">Пати</span>
-        <select id="c_t1" aria-label="Тиммейт 1"></select>
-        <select id="c_t2" aria-label="Тиммейт 2"></select>
-        <select id="c_t3" aria-label="Тиммейт 3"></select>
-      </div>
+    <div class="step"><span class="stepn">1</span><b>Группа</b><span class="help">три тиммейта — их синергии войдут в расчёт</span></div>
+    <div class="party2">
+      <div class="pm"><span class="emb" id="c_t1e"></span><select id="c_t1" aria-label="Тиммейт 1"></select></div>
+      <div class="pm"><span class="emb" id="c_t2e"></span><select id="c_t2" aria-label="Тиммейт 2"></select></div>
+      <div class="pm"><span class="emb" id="c_t3e"></span><select id="c_t3" aria-label="Тиммейт 3"></select></div>
     </div>
-    <div class="clsgrid small" id="clsGrid" hidden></div>
-    <p class="help adv-only" id="c_classInfo" style="margin:6px 0 0"></p>
-    <p class="help adv-only" id="c_synInfo" style="margin:2px 0 0"></p>
+    <p class="help" id="c_synInfo" style="margin:8px 0 0"></p>
   </div>
 
   <div class="panel imp" id="impBox">
+    <div class="step"><span class="stepn">2</span><b>Мой персонаж</b><span class="help">RU-сервер, по нику</span></div>
     <form class="improw" id="impForm" autocomplete="off">
-      <label for="impName"><b>Мой персонаж</b> <span class="help">RU-сервер</span></label>
-      <input type="text" id="impName" placeholder="Ник персонажа" spellcheck="false" autocapitalize="off" enterkeyhint="go">
+      <input type="text" id="impName" placeholder="Ник персонажа" spellcheck="false" autocapitalize="off" enterkeyhint="go" aria-label="Ник персонажа">
       <button type="submit" class="primary" id="impGo">Загрузить</button>
       <button type="button" id="impBack" hidden>Вернуть билд</button>
     </form>
     <div id="impMsg" aria-live="polite"></div>
+    <div class="sbar-row" style="margin-top:10px">
+      <button type="button" id="clsToggle" class="clspick" aria-expanded="false" aria-controls="clsGrid" title="Сменить класс"><span class="emb" id="c_emb"></span><span id="clsName"></span><span class="caret" aria-hidden="true">▾</span></button>
+      <select id="c_class" aria-label="Класс" hidden></select>
+      <div class="seg" id="q_paths" role="group" aria-label="Путь Enlightenment"></div>
+    </div>
+    <div class="clsgrid small" id="clsGrid" hidden></div>
+    <p class="help adv-only" id="c_classInfo" style="margin:6px 0 0"></p>
     <details class="why"><summary>Что загружается и откуда</summary>
-      <p class="help" style="margin:6px 0">Страница персонажа из Оружейной <a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a>: класс и путь, узлы Ark Passive, Смертоносность и Сноровка, гравировки и Фетранит, полировка бижутерии, браслет, свои скиллы с трайподами. Синергии пати выберите сами. У Оружейной нет открытого доступа для других сайтов, поэтому страница запрашивается через наш прокси (Cloudflare Worker), а если он недоступен — через сервис r.jina.ai. Им передаётся только ник. На RU-сервере мульти-крита ещё нет: калькулятор покажет, что будет после патча.</p>
+      <p class="help" style="margin:6px 0">Страница персонажа из Оружейной <a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a>: класс и путь, узлы Ark Passive, Смертоносность и Сноровка, гравировки и Фетранит, полировка бижутерии, браслет, свои скиллы с триподами и архиумения (скиллы без уровня). Синергии пати выберите сами. У Оружейной нет открытого доступа для других сайтов, поэтому страница запрашивается через наш прокси (Cloudflare Worker), а если он недоступен — через сервис r.jina.ai. Им передаётся только ник. На RU-сервере мульти-крита ещё нет: калькулятор покажет, что будет после патча.</p>
       <p class="help" style="margin:0 0 4px">Если сервис не отвечает, можно загрузить сохранённую страницу персонажа (Ctrl+S на лостарк.рф):</p>
       <label class="drop" id="impDrop"><input type="file" id="impFile" accept=".html,.htm,text/html"><span>Файл страницы — перетащите сюда или нажмите</span></label>
     </details>
@@ -682,7 +752,6 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     <details class="set">
       <summary><b>Узлы класса</b><span class="sum" id="sumNodes"></span></summary>
       <div class="setbody">
-        <div id="q_pathcmp" class="pathcmp"></div>
         <div id="q_nodes"></div>
       </div>
     </details>
@@ -696,16 +765,16 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
         <label class="chk"><input type="checkbox" id="c_dance" checked> Саппорт с Passionate Dance (+14% Evo, только если в пати есть саппорт)</label>
         <p class="help" id="skInfo"></p>
         <label class="chk"><input type="checkbox" id="s_bysk" checked> Считать по скиллам: свой шанс и крит. урон у каждого скилла</label>
-        <div class="field"><label for="s_part">Бонус трайпода только на части ударов: доля, %</label><input type="number" id="s_part" class="w100" min="0" max="100" step="5" value="50"><span class="help">Например, «крит у взрыва» или «у последнего удара». Как у loagg: по умолчанию 50%.</span></div>
+        <div class="field"><label for="s_part">Бонус трипода только на части ударов: доля, %</label><input type="number" id="s_part" class="w100" min="0" max="100" step="5" value="50"><span class="help">Например, «крит у взрыва» или «у последнего удара». Как у loagg: по умолчанию 50%.</span></div>
         <div id="skTbl"></div>
-        <p class="help">Скиллы, доли урона и трайподы — по профилям топ-игроков этого пути (Official Armory). Доля урона оценена по урону из подсказки и перезарядке, её можно поправить. Не учтены баффы на время, условия по HP врага и шансовые эффекты.</p>
+        <p class="help">Скиллы, доли урона и триподы — по профилям топ-игроков этого пути (Official Armory). Доля урона оценена по урону из подсказки и перезарядке, её можно поправить. Не учтены баффы на время, условия по HP врага и шансовые эффекты.</p>
       </div>
     </details>
   </div>
 
   <div class="adv-only" style="display:grid;gap:14px;margin-top:14px">
     <div class="panel"><h3>Лучшие наборы гравировок</h3>
-      <div class="tablewrap" style="border:0"><table><thead><tr><th>#</th><th>Гравировки (в скобках — уровень Фетранита)</th><th>Урон</th><th></th></tr></thead><tbody id="engTbl"></tbody></table></div>
+      <div class="tablewrap" style="border:0"><table><thead><tr><th>#</th><th>Гравировки <span style="text-transform:none;letter-spacing:0">(голубая цифра — Фетранит, название — при наведении)</span></th><th>Урон</th><th></th></tr></thead><tbody id="engTbl"></tbody></table></div>
     </div>
     <div class="panel"><h3>Ваш текущий билд</h3><div class="ap-sum ap" id="apSum"></div></div>
   </div>
@@ -764,7 +833,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
         <div class="panel">
           <h3>Узлы 5 тира при вашем билде</h3>
           <div class="tablewrap" style="border:0"><table>
-            <thead><tr><th>Узел (Lv.2)</th><th>Шанс</th><th>Evo</th><th>M(C)</th><th>Урон</th><th>vs лучший</th></tr></thead>
+            <thead><tr><th>Узел (Lv.2)</th><th>Шанс</th><th>Мульти-крит</th><th>Evo</th><th>M(C)</th><th>Урон</th><th>К лучшему</th></tr></thead>
             <tbody id="t5"></tbody></table></div>
           <p id="t5be" style="margin:12px 0 0;font-size:14px"></p>
         </div>
@@ -844,7 +913,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       <li><span class="tag hyp">?</span>Строки браслета «снижение сопротивления врага криту / крит. урону» считаются как прибавка к шансу крита / крит. урону.</li>
       <li><span class="tag hyp">?</span>Уровни Фетранита, не найденные в профилях, выведены по закономерности гравировок с той же базой (помечены *).</li>
       <li><span class="tag hyp">?</span>Значения Lv.1 у Standing Striker и MP Furnace, тексты Infighting и Stable Manager не найдены.</li>
-      <li><span class="tag hyp">?</span>Скилл с трайподом «всегда крит» критует ровно со 100% (без мульти-крита) и получает +X% урона за каждый 1% шанса крита — по формулировке трайпода и заметке loagg о Lancemaster.</li>
+      <li><span class="tag hyp">?</span>Скилл с триподом «всегда крит» критует ровно со 100% (без мульти-крита) и получает +X% урона за каждый 1% шанса крита — по формулировке трипода и заметке loagg о Lancemaster.</li>
       <li><span class="tag hyp">?</span>Доля урона скилла по умолчанию — урон из подсказки ÷ перезарядка по профилям топ-игроков; трайповые множители урона и камни не учитываются. Долю можно поправить вручную.</li>
       <li><span class="tag hyp">?</span>Импорт: гравировки ниже x4 считаются как реликтовые x4.</li>
     </ul>
@@ -866,7 +935,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       <li><a href="https://www.inven.co.kr/board/lostark/4821/111078" target="_blank" rel="noopener">Inven: Blunt Thorn против мульти-крита</a> (신촌망령, 18.11.2026)</li>
       <li><a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a> (Оружейная RU) и <a href="https://www.mokitoki.ru/statistics" target="_blank" rel="noopener">mokitoki.ru</a>: русские названия гравировок, формат RU-подсказок</li>
     </ol>
-    <p class="help">Иконки и эмблемы классов — материалы Smilegate RPG из Official Armory.</p>
+    <p class="help">Иконки узлов, гравировок и эмблемы классов — материалы Smilegate RPG (Official Armory, CDN lostark.game.onstove.com).</p>
   </section>
 </div>
 </main>
@@ -895,6 +964,30 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const S=DATA.emb, c=i%S.cols, r=Math.floor(i/S.cols);
     return `background-size:${S.cols*size}px ${S.rows*size}px;background-position:-${c*size}px -${r*size}px;width:${size}px;height:${size}px`;
   }
+  // engraving icon (engravings.png: one row in ENGR order) with Fetranite badge; mark: ok / add / del
+  const ENG_N = 15;
+  const MARK = {ok:'✓', add:'+', del:'−', chg:'↻'};
+  function engIco(id, stone, size=36, mark='', tip=''){
+    const e=ENGBY[id]; if(!e||!e.id) return '';
+    const i=ENGR.indexOf(e)-1, nm=e.n.split(' — ')[0];
+    const t=tip || (nm+(stone?` · Фетранит Lv.${stone}`:'')+(mark==='add'?' — взять':mark==='del'?' — заменить':mark==='ok'?' — уже есть':''));
+    return `<span class="ib ${mark==='del'?'gone':''}" title="${esc(t)}" aria-label="${esc(t)}"><span class="eic" style="width:${size}px;height:${size}px;background-size:${ENG_N*size}px ${size}px;background-position:-${i*size}px 0"></span>${stone?`<em class="st">${stone}</em>`:''}${mark?`<i class="${mark}">${MARK[mark]}</i>`:''}</span>`;
+  }
+  function evoIco(id, lvl, size=36, mark='', tip=''){
+    const n=BYID[id]; if(!n) return '';
+    const t=tip || (n.n+(n.max>1?' Lv.'+lvl:'')+' — '+n.d+(mark==='add'?' (взять)':mark==='del'?' (заменить)':mark==='ok'?' (уже есть)':''));
+    return `<span class="ib ${mark==='del'?'gone':''}" title="${esc(t)}" aria-label="${esc(t)}">${ico(n.ic,size)}${n.max>1?`<em>${lvl}</em>`:''}${mark?`<i class="${mark}">${MARK[mark]}</i>`:''}</span>`;
+  }
+  // relative change → cell background: 0 = best (green), losses fade to red
+  const heatBg = (v, span=0.05) => { if(Math.abs(v)<5e-5) return 'background:var(--good-bg);color:var(--evo)'; const a=Math.min(1,Math.abs(v)/span); return `background:color-mix(in srgb, ${v>0?'var(--evo)':'var(--bad)'} ${Math.round(12+a*38)}%, transparent)`; };
+  const SVG = {
+    cr:'<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6" style="stroke:var(--c)"/><circle cx="8" cy="8" r="3"/></svg>',
+    cd:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0l2 5.5L16 6l-4.6 3.7L13 16 8 12.6 3 16l1.6-6.3L0 6l6-.5z"/></svg>',
+    mc:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 0l1.2 2.8L8 4 5.2 5.2 4 8 2.8 5.2 0 4l2.8-1.2zM11 5l1.6 3.4L16 10l-3.4 1.6L11 15l-1.6-3.4L6 10l3.4-1.6z"/></svg>',
+    evo:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0l7 4v8l-7 4-7-4V4zm0 3L4 5.3v5.4L8 13l4-2.3V5.3z"/></svg>',
+    r:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 0L2 9h5l-1 7 7-9H8z"/></svg>'
+  };
+  const stile = (c, icon, k, v, t='') => `<div class="stile" style="--c:var(${c})"${t?` title="${esc(t)}"`:''}><span>${SVG[icon]||''}${k}</span><b>${v}</b></div>`;
 
   /* ---------- core model ---------- */
   const hit = (k,D,R) => k===0 ? 1 : R*(1 + k*(D-1));
@@ -919,8 +1012,8 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   const ALLC = Object.fromEntries([...CLASSES,...SUPPORTS].map(c=>[c.id,c]));
   const synTxt = s => [s.crit?`шанс крита +${s.crit}%`:'', s.cdmg?`урон при крите +${s.cdmg}%`:'', s.as?`скор. атаки +${s.as}%`:'', s.ms?`скор. бега +${s.ms}%`:'', s.other||''].filter(Boolean).join(', ') || 'нет';
   const ACCOPT = {
-    cr:{n:'Шанс крита',v:[1.55,0.95,0.40],k:'C'}, cd:{n:'Крит. урон',v:[4.00,2.40,null],k:'D'},
-    dmg:{n:'Урон по врагам',v:[2.00,1.20,0.55],k:'dmg'}, add:{n:'Доп. урон',v:[2.60,1.60,null],k:'add'},
+    cr:{n:'Шанс крита',v:[1.55,0.95,0.40],k:'C'}, cd:{n:'Крит. урон',v:[4.00,2.40,1.10],k:'D'},
+    dmg:{n:'Урон по врагам',v:[2.00,1.20,0.55],k:'dmg'}, add:{n:'Доп. урон',v:[2.60,1.60,0.60],k:'add'},
     atk:{n:'Атака %',v:[1.55,0.95,0.40],k:'none'}, watk:{n:'Атака оружия %',v:[3.00,1.80,0.80],k:'none'},
     flat:{n:'Другое',v:[0,null,null],k:'none'}
   };
@@ -1102,11 +1195,10 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   }
   function renderClassTrees(){
     $('enlTree').innerHTML = `<div class="ap-head"><h3>Enlightenment: ${esc(cls.n)}</h3><div class="ap-pts">Очки <b>${spentOf(cls.enl)}</b> / <input type="number" id="enlMax" value="${enlMax()}" min="0" max="200" style="width:60px;background:transparent;color:inherit;border-color:rgba(233,226,207,.3)" aria-label="Доступно очков Enlightenment"></div></div>
-      <div class="ap-btns">${cls.paths.map((q,i)=>`<button type="button" class="pathbtn" data-path="${i}" aria-pressed="${i===pathIdx}">Путь: ${esc(q.n)}</button>`).join('')}<button type="button" class="pathbtn" data-def="enl">По умолчанию</button></div>
-      ${tierRows(cls.enl, enlOpen, t=>`Нужно ${ENL_REQ} очк. в Tier ${t-1}`)}`;
+      <div class="ap-btns"><span class="help" style="color:rgba(233,226,207,.7)">Путь: ${esc(cls.paths[pathIdx]?cls.paths[pathIdx].n:'—')} (сменить — вверху)</span><button type="button" class="pathbtn" data-def="enl">По умолчанию</button></div>
+      ${tierRows(cls.enl.filter(enlAllowed), enlOpen, t=>`Нужно ${ENL_REQ} очк. в Tier ${t-1}`)}`;
     $('leapTree').innerHTML = `<div class="ap-head"><h3>Leap</h3><div class="ap-pts">Очки <b>${spentOf(cls.leap)}</b> / <input type="number" id="leapMax" value="${leapMax()}" min="0" max="200" style="width:60px;background:transparent;color:inherit;border-color:rgba(233,226,207,.3)" aria-label="Доступно очков Leap"></div></div>
       ${tierRows(cls.leap, leapOpen, t=>`Нужно ${LEAP_REQ} очк. в Tier 1; можно взять один узел`)}`;
-    $('enlTree').querySelectorAll('[data-path]').forEach(b=>b.addEventListener('click',()=>{ switchPath(+b.dataset.path); recompute(); }));
     $('enlTree').querySelector('[data-def]').addEventListener('click',()=>{ lv=defaultLv(); renderClassTrees(); recompute(); });
     ['enlMax','leapMax'].forEach(id=>$(id).addEventListener('change',()=>{ renderClassTrees(); recompute(); }));
     renderQuickClass();
@@ -1145,6 +1237,9 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   const teamOpts = sel => opt('','— нет —',!sel) + '<optgroup label="Саппорты">' + SUPPORTS.map(c=>opt(c.id,c.n,c.id===sel)).join('') + '</optgroup><optgroup label="Дилеры">' + CLASSES.map(c=>opt(c.id,c.n+(c.paths.some(p=>p.role==='sup')?' (ДД)':''),c.id===sel)).join('') + '</optgroup>';
   const tdef = saved.team || ['sup_bard','deadeye','glaivier'];
   ['c_t1','c_t2','c_t3'].forEach((id,i)=>$(id).innerHTML=teamOpts(tdef[i]));
+  const embOf = id => { if(!id) return null; const base=id.replace(/^sup_/,'').replace(/^valk$/,'valkyrie'); const c=CLASSES.find(k=>k.id===base); return c?c.emb:null; };
+  function partyEmb(){ ['c_t1','c_t2','c_t3'].forEach(id=>{ const e=embOf($(id).value), el=$(id+'e'); if(e===null){ el.setAttribute('style','width:28px;height:28px;background-image:none;opacity:.35'); } else el.setAttribute('style',emb(e,28)); }); }
+  partyEmb();
   const accState = saved.acc || SLOTS.map(sl=>sl.def.map(x=>[...x]));
   function gradeOpts(o,g){ if(o==='flat') return opt(0,'—',true); return ACCOPT[o].v.map((v,i)=>v===null?'':opt(i,`+${v.toFixed(2)}% ${GRADE[i].toLowerCase()}`,i===g)).join(''); }
   $('accWrap').innerHTML = SLOTS.map((sl,si)=>`<div class="acc">${ico(DATA.acc[sl.ic],44)}<b>${sl.n}</b>${[0,1,2].map(li=>{ const [o,g]=accState[si][li]; return `<div class="row"><select id="a${si}_${li}" aria-label="${sl.n}, строка ${li+1}">${sl.opts.map(k=>opt(k,ACCOPT[k].n,k===o)).join('')}</select><select id="a${si}_${li}g" aria-label="Грейд" style="width:112px;flex:none">${gradeOpts(o,g)}</select></div>`; }).join('')}</div>`).join('');
@@ -1242,7 +1337,9 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       stats:[...doc.querySelectorAll('.profile-ability-battle > ul > li')].map(li=>{ const sp=li.querySelectorAll(':scope > span'); return [s(sp[0]&&sp[0].textContent), s(sp[1]&&sp[1].textContent)]; }),
       nodes:[...doc.querySelectorAll('.profile-skill-arkpassive__item')].map(el=>[el.classList.contains('evolution')?'evo':el.classList.contains('enlightenment')?'enl':'leap', s((q(el,'.profile-arkpassive__info')||{}).textContent), file(q(el,'.profile-arkpassive__slot img'))]).filter(n=>{ const k=n.join('|'); if(seen.has(k)) return false; seen.add(k); return true; }),
       eng:[...doc.querySelectorAll('.profile-ability-engrave li')].map(li=>{ const sp=q(li,'span'); return [s(sp&&q(sp,'font')&&q(sp,'font').textContent), sp?sp.innerHTML:'']; }),
-      equip:Object.values(P.Equip||{}).map(v=>[T(v&&v.Element_000&&v.Element_000.value), flat(v)]).filter(e=>/목걸이|귀걸이|반지|팔찌|Ожерелье|Серьги|Кольцо|Браслет/.test(e[0])),
+      equip:Object.entries(P.Equip||{}).map(([k,v])=>[T(v&&v.Element_000&&v.Element_000.value), flat(v), k]).filter(e=>/목걸이|귀걸이|반지|팔찌|ожерелье|серьг|кольц|браслет/i.test(e[0]) || /^E[0-9a-f]+_0(0[6-9]|10|26)$/i.test(e[2])),
+      // skill type from the skill list: 0 ordinary, 1 arch skill without level (hyper awakening technique, often bound to Z/T), 100 awakening, 101 hyper awakening
+      stype:Object.fromEntries([...doc.querySelectorAll('.profile-skill__item [data-skill]')].map(a=>{ try{ const j=JSON.parse(a.getAttribute('data-skill')); return [T(j.name), j.skillType|0]; }catch(e){ return null; } }).filter(Boolean)),
       skills:Object.values(P.Skill||{}).map(v=>{ const e=Object.values(v||{}).filter(Boolean); const g=t=>e.filter(x=>x.type===t); const tri=(g('TripodSkillCustom')[0]||{}).value||{}; const ti=(g('CommonSkillTitle')[0]||{}).value||{};
         return {n:T((g('NameTagBox')[0]||{}).value), cd:T(ti.leftText), ic:((ti.slotData||{}).iconPath||'').split('/').pop(), t:g('SingleTextBox').map(x=>T(x.value)).join(' | '), c:g('MultiTextBox').map(x=>T(x.value)).join(' '), tri:Object.values(tri).filter(x=>x&&x.name).map(x=>[T(x.name),T(x.desc)])}; })};
   }
@@ -1271,7 +1368,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     // class: emblem file (KR and RU use the same files) or Korean class name from the API
     const c = CLASSES.find(k=> (d.emb && k.ef===d.emb) || (d.cn && k.kr===d.cn));
     if(!c) throw new Error('класс не распознан');
-    $('c_class').value=c.id; saveChar(); cls=ALLC[c.id]; setClass();
+    $('c_class').value=c.id; saveChar(); cls=ALLC[c.id]; setClass(); setGrid(false);
     // nodes: tier and level from the text, node by icon file within the tree
     const nodes=d.nodes.map(([type,info,f])=>({type, f, tier:+((info.match(/(\d)\s*티어|Ст\.\s*(\d)/)||[]).slice(1).find(Boolean)||0), lv:+((info.match(/Lv\.\s*(\d+)|ур\.\s*(\d+)/i)||[]).slice(1).find(Boolean)||0)}));
     const t1=nodes.find(n=>n.type==='enl' && n.tier===1);
@@ -1288,7 +1385,8 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     // stats: displayed Crit / Swiftness include Evolution Tier 1 points (50 per level)
     const st = k => { const row=d.stats.find(s=>k.includes(s[0])); return row?intR(row[1]):null; };
     const cr=st(['치명','Смертоносность']), sw=st(['신속','Сноровка']);
-    const brT=((d.equip||[]).find(e=>/팔찌|Браслет/.test(e[0]))||['',''])[1];
+    const isBr = e => /_026$/.test(e[2]||'') || /팔찌|браслет/i.test(e[0]);
+    const brT=((d.equip||[]).find(isBr)||['',''])[1];
     const brStat=re=>Math.min(120,intR((brT.match(re)||[])[1]||0));
     const setStat=(tot,lvl,re,br,ot,label)=>{ if(tot===null) return; const b=brStat(re); $(br).value=b; $(ot).value=Math.max(0,tot-50*lvl-b); log.push(`${label} ${tot} = Ark Passive ${50*lvl} + браслет ${b} + прочее ${Math.max(0,tot-50*lvl-b)}`); };
     setStat(cr, ranks.crit||0, /(?:치명|Смертоносность)\s*\+\s*(\d+)/, 'g_crit_br','g_crit_ot','Смертоносность');
@@ -1304,17 +1402,19 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     log.push('гравировки: '+known.map(e=>ENGBY[e[0]].n.split(' — ')[0]+(e[1]?' Ф'+e[1]:'')).join(', '));
     // accessories (polish) and bracelet
     const POL=[['dmg',/(?:적에게 주는 피해|Урон по противникам|Наносимый урон)\s*\+([\d.,]+)%/g],['add',/(?:추가 피해|Доп\. урон)\s*\+([\d.,]+)%/g],['atk',/(?:^|[^기] )(?:공격력|Сила атаки)\s*\+([\d.,]+)%/g],['watk',/(?:무기 공격력|Урон оружия)\s*\+([\d.,]+)%/g],['cr',/(?:치명타 적중률|Шанс критического удара)\s*\+([\d.,]+)%/g],['cd',/(?:치명타 피해|Критический урон)\s*\+([\d.,]+)%/g]];
-    const accs=d.equip.filter(e=>!/팔찌|Браслет/.test(e[0]));
-    const slotOf = nm => /목걸이|Ожерелье/.test(nm)?0:/귀걸이|Серьги/.test(nm)?1:/반지|Кольцо/.test(nm)?3:-1;
+    const accs=d.equip.filter(e=>!isBr(e));
+    // slot by the Armory equipment key (_006 necklace, _007/_008 earrings, _009/_010 rings), by item name otherwise (any case: «Серьги …», «… серьги»)
+    const KEYSLOT={'006':0,'007':1,'008':1,'009':3,'010':3};
+    const slotOf = (nm,key) => { const m=/_0(\d\d)$/.exec(key||''); const ks=m?KEYSLOT['0'+m[1]]:undefined; if(ks!==undefined) return ks; return /목걸이|ожерелье/i.test(nm)?0:/귀걸이|серьг/i.test(nm)?1:/반지|кольц/i.test(nm)?3:-1; };
     const used={0:0,1:0,3:0}; let nAcc=0;
-    accs.forEach(([nm,txt])=>{ const base=slotOf(nm); if(base<0) return; const si = base===0?0:base+Math.min(1,used[base]++); if(base===0 && used[0]++>0) return;
+    accs.forEach(([nm,txt,key])=>{ const base=slotOf(nm,key); if(base<0) return; const si = base===0?0:base+Math.min(1,used[base]++); if(base===0 && used[0]++>0) return;
       const seg = (txt.split(/연마 효과|Эффект полировки/)[1]||'').split(/아크 패시브|Очки системы/)[0];
       const found=[]; POL.forEach(([k,re])=>{ for(const m of seg.matchAll(re)) found.push([k,numR(m[1])]); });
       const sl=SLOTS[si]; const rows=found.filter(([k])=>sl.opts.includes(k)).slice(0,3);
       [0,1,2].forEach(li=>{ const f=rows[li]; const k=f?f[0]:'flat'; $(`a${si}_${li}`).value=k; const g=f?Math.max(0,nearestI(ACCOPT[k].v,f[1])):0; $(`a${si}_${li}g`).innerHTML=gradeOpts(k,g); });
       nAcc++; });
     if(nAcc) log.push(`бижутерия: ${nAcc} предметов`);
-    const br=d.equip.find(e=>/팔찌|Браслет/.test(e[0]));
+    const br=d.equip.find(isBr);
     if(br){ const t=(br[1].split(/팔찌 효과|Эффекты браслета/)[1]||br[1]).split(/아크 패시브|Очки системы/)[0]; const picks=[];
       const pick=(re,opts)=>{ for(const m of t.matchAll(re)){ const v=numR(m[1]); const o=opts.map(id=>BRACE.find(b=>b.v===id)); const vals=o.map(b=>b.C||b.D||b.add||b.dmg||0); picks.push(o[nearestI(vals,v)].v); } };
       pick(/(?:치명타 적중률이|Шанс критического удара повышается на)\s*([\d.,]+)\s*%/g,['cr50','cr42','cr34']);
@@ -1326,20 +1426,23 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     // skills: the character's own skills, tripods and levels; damage share from our data by skill icon (or tooltip damage)
     const base=skRef()||[]; const byIc=Object.fromEntries(base.filter(s=>s.ic).map(s=>[s.ic,s]));
     const lvOf=s=> s.lvl || +((s.t.match(/(?:스킬 레벨|Уровень умения:?)\s*(\d+)/)||[])[1]||0);
-    const own=(d.skills||[]).filter(s=>lvOf(s)>=10).map(s=>{ const ref=byIc[s.ic]; const dm=((s.t.split(' | ').find(x=>/의 (?:\[[^\]]+\] 속성 )?피해/.test(x))||'').replace(/차지 전에는\s*[\d,]+/,'').match(/[\d,]{5,}(?=\s*의)/g)||[]).reduce((a,x)=>a+intR(x),0); const cd=numR((s.cd.match(/([\d.,]+)\s*(?:초|с)/)||[])[1]||0);
-      return {n: DATA.sktr[s.n]||s.n, ic:s.ic, w: ref?ref.w:(dm&&cd?dm/cd:0), wsrc: ref?'ref':(dm&&cd?'tip':''), at: /백 어택|со спины/.test(s.t)?'back':(/헤드 어택|в голову/.test(s.t)?'head':''), eff: s.tri.map(([,x])=>triEff(x)).filter(Boolean)}; });
+    const stype=d.stype||{}; const isArch=s=>stype[s.n]===1 || (stype[s.n]===undefined && !lvOf(s) && /Ур\. 1 \(макс|1레벨 \(최대/.test(s.t||''));
+    const inUse=s=>lvOf(s)>=10 || isArch(s);
+    const own=(d.skills||[]).filter(inUse).map(s=>{ const ref=byIc[s.ic]; const dm=((s.t.split(' | ').find(x=>/의 (?:\[[^\]]+\] 속성 )?피해/.test(x))||'').replace(/차지 전에는\s*[\d,]+/,'').match(/[\d,]{5,}(?=\s*의)/g)||[]).reduce((a,x)=>a+intR(x),0); const cd=numR((s.cd.match(/([\d.,]+)\s*(?:초|с)/)||[])[1]||0);
+      return {n: DATA.sktr[s.n]||s.n, ic:s.ic, w: ref?ref.w:(dm&&cd?dm/cd:0), wsrc: ref?'ref':(dm&&cd?'tip':(isArch(s)?'arch':'')), arch:isArch(s)?1:0, at: /백 어택|со спины/.test(s.t)?'back':(/헤드 어택|в голову/.test(s.t)?'head':''), eff: s.tri.map(([,x])=>triEff(x)).filter(Boolean)}; });
     if(own.length){ // shares: reference shares where known, tooltip damage/cooldown scaled to them otherwise, equal split as a last resort
       const refW=own.filter(s=>s.wsrc==='ref'), tipW=own.filter(s=>s.wsrc==='tip');
       if(!refW.length && tipW.length){ const t=tipW.reduce((a,s)=>a+s.w,0); tipW.forEach(s=>s.w/=t); }
       else if(tipW.length){ tipW.forEach(s=>s.w=0.02); }
+      const arch=own.filter(s=>s.wsrc==='arch'); arch.forEach(s=>s.w = refW.length||tipW.length ? 0.06 : 1/own.length); // arch skills: ~6% each before normalising, adjustable in «Скиллы»
       const rest=own.filter(s=>!s.wsrc); rest.forEach(s=>s.w = refW.length||tipW.length ? 0.02 : 1/own.length);
       const t=own.reduce((a,s)=>a+s.w,0)||1; own.forEach(s=>s.w/=t);
       const wb=own.filter(s=>s.at==='back').reduce((a,s)=>a+s.w,0), wh=own.filter(s=>s.at==='head').reduce((a,s)=>a+s.w,0);
       $('s_back').checked = wb>=0.5; $('s_head').checked = wh>=0.5 && wb<0.5;
-      const manaC=(d.skills||[]).filter(s=>lvOf(s)>=10).map(s=>intR(((s.c||'').match(/(?:마나|маны:?)\s*([\d\s]+)/i)||[])[1]||'')).filter(Boolean).sort((p,q)=>p-q);
+      const manaC=(d.skills||[]).filter(inUse).map(s=>intR(((s.c||'').match(/(?:마나|маны:?)\s*([\d\s]+)/i)||[])[1]||'')).filter(Boolean).sort((p,q)=>p-q);
       $('s_mana').checked = manaC.length>0; if(manaC.length) $('s_mp').value=manaC[Math.floor(manaC.length/2)]; $('mpField').hidden=!$('s_mana').checked;
       skCustom[cls.id+':'+pathIdx]=own; store.set('skCustom1',skCustom); delete skOv[cls.id+':'+pathIdx]; store.set('skOv1',skOv); skKey='';
-      log.push(`скиллы: ${own.length} (уровень 10+), крит из трайподов: ${own.filter(s=>s.eff.length).length}`);
+      log.push(`скиллы: ${own.length} (уровень 10+ и архиумения: ${own.filter(s=>s.arch).length}), крит из триподов: ${own.filter(s=>s.eff.length).length}`);
     }
     saveChar(); recompute();
     return {log, warn};
@@ -1351,13 +1454,13 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   const skBase = () => (typeof skCustom!=='undefined' && skCustom[cls.id+':'+pathIdx]) || skRef();
   const skState = () => { const base=skBase(); if(!base) return null; const o=skOv[cls.id+':'+pathIdx]||{};
     return base.map((sk,i)=>{ const e=(sk.eff||[]).reduce((a,f)=>({C:a.C+(f.C||0),D:a.D+(f.D||0),always:a.always||!!f.always,perC:Math.max(a.perC,f.perC||0),part:a.part||!!f.part}),{C:0,D:0,always:false,perC:0,part:false}); const ov=o[i]||{};
-      return {n:sk.n, at:sk.at, w: ov.w!==undefined?ov.w:sk.w*100, C: ov.C!==undefined?ov.C:e.C, D: ov.D!==undefined?ov.D:e.D, always:e.always, perC:e.perC, part:e.part, on: ov.on!==undefined?ov.on:true}; }); };
+      return {n:sk.n, at:sk.at, arch:sk.arch, w: ov.w!==undefined?ov.w:sk.w*100, C: ov.C!==undefined?ov.C:e.C, D: ov.D!==undefined?ov.D:e.D, always:e.always, perC:e.perC, part:e.part, on: ov.on!==undefined?ov.on:true}; }); };
   function skList(){ if(!$('s_bysk') || !$('s_bysk').checked) return null; const st=skState(); if(!st) return null;
     const on=st.filter(k=>k.on && k.w>0); const tot=on.reduce((a,k)=>a+k.w,0); if(!tot) return null;
     return on.map(k=>({w:k.w/tot, C:k.C, D:k.D, always:k.always, perC:k.perC, part:k.part})); }
   function renderSkTbl(){ const st=skState(); const box=$('skTbl');
     if(!st){ box.innerHTML='<p class="help">Для этого класса нет данных по скиллам — расчёт идёт по общему шансу крита.</p>'; return; }
-    box.innerHTML = `<div class="sktwrap"><table class="skt"><thead><tr><th></th><th>Скилл</th><th>Доля урона, %</th><th>+шанс, %</th><th>+крит. урон, %</th><th>Особое</th></tr></thead><tbody>${st.map((k,i)=>`<tr><td><input type="checkbox" data-sk="on" data-i="${i}" ${k.on?'checked':''} aria-label="Учитывать ${esc(k.n)}"></td><td>${esc(k.n)}${k.at?` <span class="tag">${k.at==='back'?'спина':'голова'}</span>`:''}</td><td><input type="number" data-sk="w" data-i="${i}" value="${(+k.w).toFixed(1)}" min="0" max="100" step="0.5" aria-label="Доля ${esc(k.n)}"></td><td><input type="number" data-sk="C" data-i="${i}" value="${k.C}" min="0" max="200" step="1" aria-label="Шанс ${esc(k.n)}"></td><td><input type="number" data-sk="D" data-i="${i}" value="${k.D}" min="0" max="500" step="1" aria-label="Крит. урон ${esc(k.n)}"></td><td class="help">${k.always?`всегда крит, +${k.perC}% урона за 1% шанса`:''}${k.part?'бонус на части ударов':''}</td></tr>`).join('')}</tbody></table></div>
+    box.innerHTML = `<div class="sktwrap"><table class="skt"><thead><tr><th></th><th>Скилл</th><th>Доля урона, %</th><th>+шанс, %</th><th>+крит. урон, %</th><th>Особое</th></tr></thead><tbody>${st.map((k,i)=>`<tr><td><input type="checkbox" data-sk="on" data-i="${i}" ${k.on?'checked':''} aria-label="Учитывать ${esc(k.n)}"></td><td>${esc(k.n)}${k.arch?' <span class="tag off" title="Скилл без уровня (Z/T). Долю урона оцените сами">архиумение</span>':''}${k.at?` <span class="tag">${k.at==='back'?'спина':'голова'}</span>`:''}</td><td><input type="number" data-sk="w" data-i="${i}" value="${(+k.w).toFixed(1)}" min="0" max="100" step="0.5" aria-label="Доля ${esc(k.n)}"></td><td><input type="number" data-sk="C" data-i="${i}" value="${k.C}" min="0" max="200" step="1" aria-label="Шанс ${esc(k.n)}"></td><td><input type="number" data-sk="D" data-i="${i}" value="${k.D}" min="0" max="500" step="1" aria-label="Крит. урон ${esc(k.n)}"></td><td class="help">${k.always?`всегда крит, +${k.perC}% урона за 1% шанса`:''}${k.part?'бонус на части ударов':''}</td></tr>`).join('')}</tbody></table></div>
       <button type="button" id="skReset" style="margin-top:6px">Сбросить к данным топ-игроков</button>${skCustom[cls.id+':'+pathIdx]?' <span class="help">Сейчас — скиллы загруженного персонажа.</span>':''}`;
     box.querySelectorAll('[data-sk]').forEach(inp=>inp.addEventListener('change',()=>{ const key=cls.id+':'+pathIdx; const o=skOv[key]=skOv[key]||{}; const i=+inp.dataset.i; o[i]=o[i]||{};
       o[i][inp.dataset.sk] = inp.dataset.sk==='on' ? inp.checked : Math.max(0,+inp.value||0); store.set('skOv1',skOv); recompute(); }));
@@ -1559,7 +1662,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const t1={}; NODES.filter(n=>n.t===1).forEach(n=>{ if(ranks[n.id]) t1[n.id]=ranks[n.id]; });
     const resCur = evoSearch(X, t1);
     const top=resCur.slice(0,8), bestCur=resCur[0].tot;
-    $('optTbl').innerHTML = top.map((o,i)=>`<tr class="${i===0?'best':''}"><td class="n">${i+1}</td><td>${label(o.a)}</td><td>${label(o.b)}</td><td>${label(o.c)}</td><td>${label(o.d)}</td><td class="n">${o.ev.ce.toFixed(1)}%</td><td class="n">${o.ev.t5==='bt'?'нет':pct(Math.max(0,Math.min(1,o.ev.ce/100-1)),1)}</td><td class="n">${o.ev.evo.toFixed(1)}%</td><td class="n ${i?'bad':'good'}">${i?sign(o.tot/bestCur-1):'лучший'}</td><td><button type="button" data-apply="${i}">Применить</button></td></tr>`).join('');
+    $('optTbl').innerHTML = top.map((o,i)=>`<tr class="${i===0?'best':''}"><td class="n">${i+1}</td>${[o.a,o.b,o.c,o.d].map(t=>`<td><div class="icons" style="gap:8px">${Object.entries(t).map(([k,v])=>evoIco(k,v,30)).join('')||'<span class="none">—</span>'}</div></td>`).join('')}<td class="n">${o.ev.ce.toFixed(1)}%</td><td class="n">${o.ev.t5==='bt'?'нет':pct(Math.max(0,Math.min(1,o.ev.ce/100-1)),1)}</td><td class="n">${o.ev.evo.toFixed(1)}%</td><td class="hv" style="${heatBg(o.tot/bestCur-1)}">${i?sign(o.tot/bestCur-1):'лучший'}</td><td><button type="button" data-apply="${i}">Применить</button></td></tr>`).join('');
     $('optTbl').querySelectorAll('[data-apply]').forEach(btn=>btn.addEventListener('click',()=>{ ranks={...top[+btn.dataset.apply].r}; store.set('apRanks3',ranks); renderTree(); recompute(); }));
     // joint search over Enlightenment path x Evolution x engravings
     function joint(x0){
@@ -1575,11 +1678,10 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
       eng = engSearch(x0, evoBest.r, E);
       return {x0, evoBest, eng, tot: eng.res[0].tot};
     }
-    const saveP=pathIdx, saveL=lv;
+    const saveP=pathIdx;
     if(isSupPathOf(cls, saveP)){ renderSupport(cur, ar); return; }
-    const pathRes = cls.paths.map((p,i)=>({p,i})).filter(o=>!isSupPathOf(cls,o.i)).map(({p,i})=>{ pathIdx=i; lv = i===saveP ? saveL : (lvByPath[i] ? {...lvByPath[i]} : defaultLv()); const r=joint(ctxBase()); r.i=i; r.n=p.n; r.lv=lv; return r; });
-    pathIdx=saveP; lv=saveL;
-    const win = pathRes.find(r=>r.i===saveP)||pathRes[0];
+    // only the chosen path is optimised: the Enlightenment path is the player's choice
+    const win = joint(ctxBase()); win.i=saveP; win.n=cls.paths[saveP]?cls.paths[saveP].n:'';
     const X0w = win.x0, evoBest = win.evoBest, eng = win.eng;
     const bestTot = win.tot;
     const bestX = withEng(X0w, eng.res[0].list);
@@ -1591,55 +1693,68 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const swapTot=(id,x)=>{ const r={...evoBest.r}; ['bt','ss','si','mf'].forEach(k=>delete r[k]); r[id]=2; const e=evaluate(r,x); return e.core*x.dmg; };
     const diffBT=x=>swapTot('bt',x)-Math.max(swapTot('si',x),swapTot('ss',x),swapTot('mf',x));
     const btWins=diffBT(bestX)>=0;
-    function findShift(key, lo, hi, step){ for(let t=step;t<=Math.max(-lo,hi)+1e-9;t+=step){ for(const v of [t,-t]){ if(v<lo||v>hi) continue; const x={...bestX,[key]:bestX[key]+v}; if((diffBT(x)>=0)!==btWins) return v; } } return null; }
     // one-directional search: first value of the shift where the winner flips
     function findDir(key, dir, lim, step){ for(let t=step;t<=lim+1e-9;t+=step){ const v=dir*t; const x={...bestX,[key]:bestX[key]+v}; if((diffBT(x)>=0)!==btWins) return v; } return null; }
     const f1=v=>v.toFixed(1), f0=v=>v.toFixed(0);
+    const btIco=evoIco('bt',2,28,'','Blunt Thorn'), altIco=evoIco(alt.id,2,28,'',alt.n);
     let thr;
     if(btWins){
       const dC=findDir('C',-1,bev.C,0.5), dD=findDir('D',1,400,1), dE=findDir('evo',1,300,1);
-      thr = `<b>Blunt Thorn остаётся лучше, пока:</b><br>
-        шанс крита ${dC===null?'не опускается ниже 0% (при любом шансе)':`выше <b>${f1(bev.C+dC)}%</b> (сейчас ${f1(bev.C)}%, запас ${f1(-dC)}%)`}. Чем ниже шанс, тем меньше Blunt Thorn превращает в Evolution.<br>
-        <b>${alt.n} станет лучше, если:</b><br>
-        крит. урон вырастет до <b>${dD===null?'—':f0(bev.D+dD)+'%'}</b>${dD===null?' (не наступит до +400%)':` (+${f0(dD)}% к текущим ${f0(bev.D)}%)`}<br>
-        или Evolution damage из других источников вырастет на <b>${dE===null?'—':'+'+f0(dE)+'%'}</b>${dE===null?' (не наступит до +300%)':''}.<br>
-        <span class="help">${bev.C+ (dC||0) <100 ? 'При шансе ниже 100% мульти-крита нет, выигрыш '+alt.n+' там идёт от его Evolution и полного шанса крита.' : ''}</span>`;
+      thr = `<li>${btIco} лучше, пока шанс крита <b>${dC===null?'любой':'≥ '+f1(bev.C+dC)+'%'}</b> <span class="help">(сейчас ${f1(bev.C)}%)</span></li>
+        <li>${altIco} обгонит при крит. уроне <b>${dD===null?'— не обгонит до +400%':'≥ '+f0(bev.D+dD)+'%'}</b> <span class="help">(сейчас ${f0(bev.D)}%)</span>${dE===null?'':` или Evolution <b>+${f0(dE)}%</b>`}</li>`;
     } else {
-      const dC=findDir('C',1,250,0.5), dD=findDir('D',-1,bev.D-100,1), dE=findDir('evo',-1,bestX.evo,1);
-      thr = `<b>Blunt Thorn станет лучше, если:</b><br>
-        шанс крита вырастет до <b>${dC===null?'—':f1(bev.C+dC)+'%'}</b>${dC===null?' (не наступит до +250%)':` (+${f1(dC)}% к текущим ${f1(bev.C)}%)`}<br>
-        или крит. урон снизится до <b>${dD===null?'—':f0(bev.D+dD)+'%'}</b>${dD===null?' (не наступит)':` (−${f0(-dD)}%)`}<br>
-        или Evolution damage из других источников снизится на <b>${dE===null?'—':f0(-dE)+'%'}</b>${dE===null?' (не наступит)':''}.`;
+      const dC=findDir('C',1,250,0.5), dD=findDir('D',-1,bev.D-100,1);
+      thr = `<li>${btIco} станет лучше при шансе крита <b>${dC===null?'— не станет даже при +250%':'≥ '+f1(bev.C+dC)+'%'}</b> <span class="help">(сейчас ${f1(bev.C)}%)</span></li>
+        <li>или при крит. уроне <b>${dD===null?'— не станет':'≤ '+f0(bev.D+dD)+'%'}</b> <span class="help">(сейчас ${f0(bev.D)}%)</span></li>`;
     }
     // +10% crit chance vs +10% crit damage, same build
     const totX = x => evaluate(evoBest.r, x).core*x.dmg;
     const g10C = totX({...bestX, C:bestX.C+10})/bestTot-1, g10D = totX({...bestX, D:bestX.D+10})/bestTot-1;
-    const cmp10 = `<div class="cmp10">Что качать: +10% шанса <b>${sign(g10C)}</b> · +10% крит. урона <b>${sign(g10D)}</b> → выгоднее <b>${Math.abs(g10C-g10D)<0.0005?'одинаково':(g10C>g10D?'шанс крита':'крит. урон')}</b></div>`;
+    const gMax = Math.max(g10C,g10D,1e-9);
+    const bar2 = (c,icon,t,v,w) => `<div class="${w?'win':''}" style="--c:var(${c})"><span style="display:flex;gap:6px;align-items:center">${SVG[icon]}${t}</span><div class="bar"><i style="width:${Math.max(2,v/gMax*100).toFixed(1)}%"></i></div><b class="mono">${sign(v)}</b></div>`;
+    const cmp10 = `<div class="bars2">${bar2('--c-cr','cr','+10% шанса',g10C,g10C>=g10D)}${bar2('--c-cd','cd','+10% крит. урона',g10D,g10D>g10C)}</div>`;
     // Evermind-style grid: Blunt Thorn vs the best other Tier 5 at each crit chance × crit damage
     const hmC=[80,90,100,110,120,130,140,150,160,170,180,190,200], hmD=[200,220,240,260,280,300,320,340,360,380,400];
     const nearC=hmC.reduce((a,v)=>Math.abs(v-bev.C)<Math.abs(a-bev.C)?v:a), nearD=hmD.reduce((a,v)=>Math.abs(v-bev.D)<Math.abs(a-bev.D)?v:a);
     const hmCell = (c,dd) => { const x={...bestX, C:bestX.C+(c-bev.C), D:bestX.D+(dd-bev.D)}; const bt=swapTot('bt',x); const o=Math.max(swapTot('si',x),swapTot('ss',x),swapTot('mf',x)); return bt/o-1; };
-    const heat = `<div class="hmwrap"><table class="hm"><caption>Blunt Thorn против лучшего другого узла Tier 5 (${esc(alt.n)} и др.): + значит Blunt Thorn лучше</caption><thead><tr><th>шанс ↓ · урон →</th>${hmD.map(d=>`<th>${d}%</th>`).join('')}</tr></thead><tbody>${hmC.map(c=>`<tr><th>${c}%</th>${hmD.map(dd=>{ const v=hmCell(c,dd); const a=Math.min(1,Math.abs(v)/0.08); return `<td class="${c===nearC&&dd===nearD?'me':''}" style="background:color-mix(in srgb, ${v>=0?'var(--evo)':'var(--sky)'} ${Math.round(a*55)}%, transparent)">${v>=0?'+':'−'}${Math.abs(v*100).toFixed(1)}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div><p class="help" style="margin:4px 0 0">Как таблица Evermind (Inven), но с вашими Evolution, гравировками, пати и узлами. Рамка — ближайшая к вам клетка (шанс ${bev.C.toFixed(0)}%, крит. урон ${bev.D.toFixed(0)}%). Остальной билд не меняется.</p>`;
-    const thrHtml=`<div class="s" style="margin-top:6px">${thr}</div>${heat}`;
+    const heat = `<div class="legend" style="margin-top:10px"><span><b style="background:var(--evo)">+</b>Blunt Thorn лучше</span><span><b style="background:var(--bad)">−</b>Blunt Thorn хуже (лучше ${esc(alt.n)} и др.)</span><span>Рамка — вы</span></div><div class="hmwrap"><table class="hm"><thead><tr><th>шанс ↓ · урон →</th>${hmD.map(d=>`<th>${d}%</th>`).join('')}</tr></thead><tbody>${hmC.map(c=>`<tr><th>${c}%</th>${hmD.map(dd=>{ const v=hmCell(c,dd); const a=Math.min(1,Math.abs(v)/0.08); return `<td class="${c===nearC&&dd===nearD?'me':''}" style="background:color-mix(in srgb, ${v>=0?'var(--evo)':'var(--bad)'} ${Math.round(10+a*50)}%, transparent)">${v>=0?'+':'−'}${Math.abs(v*100).toFixed(1)}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div><p class="help" style="margin:4px 0 0">Как таблица Evermind (Inven), но с вашими Evolution, гравировками, пати и узлами.</p>`;
     const t1warn = spent(1)<TIERS[1].cap ? `<p class="bad" style="margin:0">Tier 1 заполнен на ${spent(1)} из 40 — тиры 2–5 у текущего билда не открыты.</p>` : '';
-    const curNames = cur.map(e=>e[0]);
-    const evoChipsL = r => Object.entries(r).filter(([k,v])=>v>0 && BYID[k] && BYID[k].t>=2).sort((p,q)=>BYID[q[0]].t-BYID[p[0]].t).map(([k,v])=>`<span class="evochip" title="${esc(BYID[k].d)}">${ico(BYID[k].ic,26)}${esc(BYID[k].n)}${BYID[k].max>1?` <b>${v}</b>`:''}</span>`).join('');
-    const engChips = eng.res[0].list.map(([id,l])=>`<span class="${curNames.includes(id)?'':'new'}" title="${esc(ENGBY[id].n)}">${esc(ENGBY[id].n.split(' — ')[0])}${l?' · Ф'+l:''}</span>`).join('');
     const gain = bestTot/curTot-1, isBest = gain<0.0005;
-    const btVerdict = btT>=alt.tot ? `<b>Blunt Thorn</b> выгоднее ${esc(alt.n)} на ${pct(btT/alt.tot-1,1)}` : `<b>Blunt Thorn не нужен</b>: ${esc(alt.n)} лучше на ${pct(alt.tot/btT-1,1)}`;
+    // what stays and what changes: Evolution tiers 2–5 and engravings
+    const evoCur=Object.entries(ar).filter(([k,v])=>v>0&&BYID[k]&&BYID[k].t>=2), evoNew=Object.entries(evoBest.r).filter(([k,v])=>v>0&&BYID[k]&&BYID[k].t>=2);
+    const byT=(a,b)=>BYID[b[0]].t-BYID[a[0]].t;
+    // same node / engraving at another level is a level change (↻), not a swap
+    const eKeep=evoNew.filter(([k,v])=>ar[k]===v).sort(byT), eAdd=evoNew.filter(([k,v])=>ar[k]!==v).sort(byT), eDel=evoCur.filter(([k,v])=>!evoBest.r[k]).sort(byT);
+    const gCur=cur.filter(e=>e[0]), gNew=eng.res[0].list.filter(e=>e[0]);
+    const same=(a,b)=>a[0]===b[0]&&a[1]===b[1];
+    const gKeep=gNew.filter(e=>gCur.some(c=>same(c,e))), gAdd=gNew.filter(e=>!gCur.some(c=>same(c,e))), gDel=gCur.filter(c=>!gNew.some(e=>e[0]===c[0]));
+    const evoAddI=([k,v])=>ar[k] ? evoIco(k,v,36,'chg',`${BYID[k].n}: Lv.${ar[k]} → Lv.${v}`) : evoIco(k,v,36,'add');
+    const engAddI=([id,l])=>{ const c=gCur.find(x=>x[0]===id); const nm=ENGBY[id].n.split(' — ')[0]; return c ? engIco(id,l,36,'chg',`${nm}: Фетранит ${c[1]?'Lv.'+c[1]:'нет'} → ${l?'Lv.'+l:'нет'}`) : engIco(id,l,36,'add'); };
+    const cellI=(arr,f)=>arr.length?`<div class="icons">${arr.map(f).join('')}</div>`:'<span class="none">—</span>';
+    const chgTable = `<div class="tablewrap" style="border:0"><table class="cmpT"><thead><tr><th></th><th class="ok">✓ Уже есть</th><th class="add">+ Взять / ↻ уровень</th><th class="del">− Заменить</th></tr></thead><tbody>
+      <tr><td class="lbl">Evolution</td><td>${cellI(eKeep,([k,v])=>evoIco(k,v,36,'ok'))}</td><td>${cellI(eAdd,evoAddI)}</td><td>${cellI(eDel,([k,v])=>evoIco(k,v,36,'del'))}</td></tr>
+      <tr><td class="lbl">Гравировки</td><td>${cellI(gKeep,([id,l])=>engIco(id,l,36,'ok'))}</td><td>${cellI(gAdd,engAddI)}</td><td>${cellI(gDel,([id,l])=>engIco(id,l,36,'del'))}</td></tr>
+      </tbody></table></div><p class="help" style="margin:0">Наведите на иконку — название и уровень. Цифра справа — уровень узла, голубая слева — Фетранит. ↻ — тот же узел или гравировка, но другой уровень.</p>`;
+    const btDiff = btT>=alt.tot ? btT/alt.tot-1 : alt.tot/btT-1, btBetter = btT>=alt.tot;
     $('answer').innerHTML = `${t1warn}
-      <div class="hero">
-        <div class="gain ${isBest?'':'good'}">${isBest?'Билд уже лучший':sign(gain)}<small>${isBest?'для '+esc(cls.n)+' с этой пати':'урона, если взять лучший билд'}</small></div>
-        <div class="btns">${isBest?'':'<button type="button" class="primary" id="applyAll">Применить всё</button>'}<button type="button" id="copyBuild">Скопировать билд</button></div>
-      </div>
-      ${lastChange}
       ${curBuildHtml(B, X, cur, ar)}
-      ${pathRes.filter(r=>r!==win).map(r=>{ const d=r.tot/win.tot-1; return `<div class="bline other"><span class="lbl">Другой путь</span><div><b>${esc(r.n)}</b> с его лучшим билдом: <b class="${d>0?'good':'bad'}">${sign(d)}</b> к лучшему билду ${esc(win.n)} <span class="help">· ${esc(label(r.evoBest.d))} · ${r.eng.res[0].list.map(e=>esc(ENGBY[e[0]].n.split(' — ')[0])).join(', ')}</span> <button type="button" data-gopath="${r.i}">Перейти на этот путь</button></div></div>`; }).join('')}
-      <div class="bline"><span class="lbl">Evolution</span><div class="evochips">${evoChips(evoBest.r)}<button type="button" id="applyEvo" class="adv-only">Применить</button></div></div>
-      <div class="bline"><span class="lbl">Гравировки</span><div><div class="engchips">${engChips}</div><button type="button" id="applyEng" class="adv-only" style="margin-top:6px">Применить</button></div></div>
-      <div class="bline"><span class="lbl">Крит</span><div class="verdict">${btVerdict}. <span class="help">Шанс крита ${bev.C.toFixed(0)}%, крит. урон ${bev.D.toFixed(0)}%${evoBest.ev.t5==='bt'?'':`, мульти-крит у ${pct(bev.mc,0)} ударов${bestX.skills?' (среднее по скиллам)':''}`}.</span>
-        ${cmp10}<details class="why"><summary>Когда это изменится? Таблица BT против мульти-крита</summary>${thrHtml}</details></div></div>`;
-    $('answer').querySelectorAll('[data-gopath]').forEach(btn=>btn.addEventListener('click',()=>{ const r=pathRes.find(x=>x.i===+btn.dataset.gopath); switchPath(r.i); ranks={...r.evoBest.r}; store.set('apRanks3',ranks); renderTree(); applyEngSet(r.eng.freeIdx, r.eng.res[0].set); }));
+      <div class="card2">
+        <div class="hero">
+          <div class="gain ${isBest?'':'good'}">${isBest?'Билд уже лучший':sign(gain)}<small>${isBest?'для '+esc(cls.n)+' с этой пати':'урона с лучшим билдом'}</small></div>
+          <div class="btns">${isBest?'':'<button type="button" class="primary" id="applyAll">Применить всё</button>'}<button type="button" id="copyBuild">Скопировать билд</button></div>
+        </div>
+        ${lastChange}
+        ${chgTable}
+        <div class="ap-btns adv-only" style="gap:6px"><button type="button" id="applyEvo">Применить Evolution</button><button type="button" id="applyEng">Применить гравировки</button></div>
+      </div>
+      <div class="card2">
+        <div class="chead"><h3>Крит</h3></div>
+        <div class="vs"><span class="${btBetter?'win':'lose'}">${evoIco('bt',2,36,'','Blunt Thorn')}</span><span class="help">против</span><span class="${btBetter?'lose':'win'}">${evoIco(alt.id,2,36,'',alt.n)}</span>
+          <span><b>${btBetter?'Blunt Thorn':esc(alt.n)}</b> лучше на <b class="good">${pct(btDiff,1)}</b></span></div>
+        <div class="stiles">${stile('--c-cr','cr','Шанс крита',f0(bev.C)+'%', 'При лучшем билде')}${stile('--c-cd','cd','Крит. урон',f0(bev.D)+'%')}${stile('--c-add','mc','Мульти-крит',evoBest.ev.t5==='bt'?'нет':pct(bev.mc,0),'Доля ударов с мульти-критом'+(bestX.skills?' (среднее по скиллам)':''))}</div>
+        <div><div class="help" style="margin-bottom:4px">Что качать дальше</div>${cmp10}</div>
+        <details class="why"><summary>Когда это изменится</summary><ul class="thr">${thr}</ul>${heat}</details>
+      </div>`;
     const summary = [`${cls.n}${cls.paths.length?' — путь '+win.n:''}`,
       `Evolution: T5 ${label(evoBest.d)}; T4 ${label(evoBest.c)}; T3 ${label(evoBest.b)}; T2 ${label(evoBest.a)}`,
       `Гравировки: ${eng.res[0].list.map(([id,l])=>ENGBY[id].n.split(' — ')[0]+(l?' (Фетранит '+l+')':'')).join(', ')}`,
@@ -1650,11 +1765,8 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     if($('applyAll')) $('applyAll').addEventListener('click',()=>{ ranks={...evoBest.r}; store.set('apRanks3',ranks); renderTree(); applyEngSet(eng.freeIdx, eng.res[0].set); });
     $('applyEvo').addEventListener('click',()=>{ ranks={...evoBest.r}; store.set('apRanks3',ranks); renderTree(); recompute(); });
     $('applyEng').addEventListener('click',()=>applyEngSet(eng.freeIdx, eng.res[0].set));
-    $('engTbl').innerHTML = eng.res.slice(0,5).map((o,i)=>`<tr class="${i===0?'best':''}"><td class="n">${i+1}</td><td>${o.set.map(([id,l])=>esc(ENGBY[id].n.split(' — ')[0])+(l?' ('+l+')':'')).join(', ')}</td><td class="n ${i?'bad':'good'}">${i?sign(o.tot/bestTot-1):'лучший'}</td><td><button type="button" data-eng="${i}">Применить</button></td></tr>`).join('');
+    $('engTbl').innerHTML = eng.res.slice(0,8).map((o,i)=>{ const v=o.tot/bestTot-1; return `<tr class="${i===0?'best':''}"><td class="n">${i+1}</td><td><div class="icons">${o.list.filter(e=>e[0]).map(([id,l])=>engIco(id,l,34)).join('')}</div></td><td class="hv" style="${heatBg(v)}">${i?sign(v):'лучший'}</td><td><button type="button" data-eng="${i}">Применить</button></td></tr>`; }).join('');
     $('engTbl').querySelectorAll('[data-eng]').forEach(btn=>btn.addEventListener('click',()=>applyEngSet(eng.freeIdx, eng.res[+btn.dataset.eng].set)));
-    if(pathRes.length>1){
-      $('q_pathcmp').innerHTML = `<b>Пути</b> <span class="help">(у каждого свой лучший билд)</span>` + pathRes.map(r=>`<div class="pcmp ${r===win?'good':''}"><span>${r.i===saveP?'● ':''}${esc(r.n)}</span><span class="mono">${r===win?'выбран':sign(r.tot/win.tot-1)}</span><span class="help">${esc(label(r.evoBest.d))} · ${r.eng.res[0].list.map(e=>esc(ENGBY[e[0]].n.split(' — ')[0])).join(', ')}</span></div>`).join('') + `<p class="help" style="margin:4px 0 0">Оценка: учитываются эффекты узлов на крит и безусловные прибавки урона. Механику класса (стойки, режимы, баффы с условием) расчёт не моделирует.</p>`;
-    } else $('q_pathcmp').innerHTML='';
     updSummaries();
     renderT5(ar);
     update();
@@ -1669,37 +1781,46 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const critNodes=[...cls.enl,...cls.leap].filter(n=>lv[n.k] && n.e && (n.e.C||n.e.D||n.e.per||n.e.aero||n.e.dmg));
     $('sumNodes').textContent = (cls.paths[pathIdx]?cls.paths[pathIdx].n+' · ':'')+(critNodes.length?critNodes.length+' с критом/уроном':'без крит-узлов');
     $('sumSk').textContent = [ $('s_mana').checked?'мана':'без маны', $('s_back').checked?'в спину':'', $('s_head').checked?'в голову':'' ].filter(Boolean).join(' · ');
-    if($('link').checked && B){ setPair('cr','crN',Math.min(B.ce,500).toFixed(1)); setPair('cd','cdN',B.D.toFixed(0)); setPair('rr','rrN',((B.R-1)*100).toFixed(1)); }
+    if($('link').checked && B){ setPair('cr','crN',Math.min(B.ce,500).toFixed(1)); setPair('cd','cdN',B.D.toFixed(0)); setPair('rr','rrN',((B.R-1)*100).toFixed(1));
+      $('t5evo').value=(B.evo-B.e5).toFixed(1); $('t5as').value=B.as.toFixed(1); $('t5ms').value=B.ms.toFixed(1); $('t5mp').value=X&&X.mana?X.mp:0; $('t5stk').value=X?X.stk:6; }
   }
   function curBuildHtml(B, X, cur, ar){
     const ex=explain(ar, X, B); const f=v=>v.toFixed(2).replace(/\.?0+$/,'');
-    const grp=(t,k,tot,unit='%')=>{ const rows=ex[k]; if(!rows.length) return ''; return `<div class="exg"><div class="exh"><b>${t}</b><b>${k==='dmg'?'×'+X.dmg.toFixed(3):f(tot)+unit}</b></div>${rows.map(([n,v])=>`<div class="exr"><span>${esc(n)}</span><span>${v>0?'+':''}${f(v)}${unit}</span></div>`).join('')}</div>`; };
+    const grp=(t,k,c,tot,unit='%')=>{ const rows=ex[k]; if(!rows.length) return ''; return `<div class="exg" style="--c:var(${c})"><div class="exh"><b>${t}</b><b>${k==='dmg'?'×'+X.dmg.toFixed(3):f(tot)+unit}</b></div>${rows.map(([n,v])=>`<div class="exr"><span>${esc(n)}</span><span class="${v>0?'p':v<0?'m':''}">${v>0?'+':''}${f(v)}${unit}</span></div>`).join('')}</div>`; };
     const dmgTot=(X.dmg-1)*100;
-    const sk = X.skills ? `<p class="help" style="margin:6px 0 0">Шанс и крит. урон выше — общие. Свои бонусы у скиллов (трайпод «крит +X%») и доли урона — в «Скиллы»; ${B.t5==='bt'?'с Blunt Thorn мульти-крита нет (шанс ограничен 80%)':'мульти-крит в среднем у '+pct(B.mc,0)+' ударов'}.</p>` : '';
-    const t5n = B.t5?N5(B.t5):'нет узла Tier 5';
-    const eng = cur.filter(e=>e[0]).map(([id,l])=>esc(ENGBY[id].n.split(' — ')[0])+(l?' Ф'+l:'')).join(', ')||'нет гравировок';
+    const sk = X.skills ? `<p class="help" style="margin:6px 0 0">Свои бонусы скиллов (трипод «крит +X%») и доли урона — в «Скиллы».</p>` : '';
     const snap=store.get('impSnap');
-    return `<details class="curb"><summary><span class="lbl">Ваш билд</span><span class="cbs">${esc(cls.n)}${cls.paths.length?' · '+esc(cls.paths[pathIdx].n):''} · ${esc(t5n)} · ${eng} · шанс ${B.C.toFixed(1)}% · крит. урон ${B.D.toFixed(0)}%${snap&&snap.cls===cls.id?' · <span class="tag">'+esc(snap.name)+'</span>':''}</span><span class="cbm">От чего рассчитано ▾</span></summary>
-      <div class="exw">${grp('Шанс крита','C',B.C)}${grp('Крит. урон','D',B.D)}${grp('Урон при крите (on Critical Hit)','R',(B.R-1)*100)}${grp('Evolution damage','evo',B.evo)}${grp('Доп. урон','add',B.add)}${grp('Урон — множители перемножаются','dmg',dmgTot)}${grp('Скорость атаки','as',B.as)}${grp('Скорость бега','ms',B.ms)}</div>
-      <p class="help" style="margin:6px 0 0">Итог: крит-множитель ×${B.m.toFixed(3)} · Evolution ×${(1+B.evo/100).toFixed(3)} · доп. урон ×${(1+B.add/100).toFixed(3)} · урон ×${X.dmg.toFixed(3)}${X.rc?` · Raid Captain ×${(1+X.rc/100*Math.max(0,B.ms)/100).toFixed(3)}`:''}. Поля — в «Подробно» и в карточках настроек ниже.</p>${sk}</details>`;
+    const evo=Object.entries(ar).filter(([k,v])=>v>0&&BYID[k]&&BYID[k].t>=2).sort((p,q)=>BYID[q[0]].t-BYID[p[0]].t);
+    const eng=cur.filter(e=>e[0]);
+    const mc = B.t5==='bt' ? 'нет' : (B.C>100||X.skills ? pct(B.mc,0) : 'нет');
+    return `<div class="card2">
+      <div class="chead"><span class="emb" style="${emb(cls.emb,32)}"></span><h3>Ваш билд</h3><span class="help">${esc(cls.n)}${cls.paths.length?' · '+esc(cls.paths[pathIdx].n):''}</span>${snap&&snap.cls===cls.id?'<span class="tag off">'+esc(snap.name)+'</span>':''}</div>
+      <div class="stiles">
+        ${stile('--c-cr','cr','Шанс крита',B.C.toFixed(1)+'%'+(B.t5==='bt'?' → 80':''), B.t5==='bt'?'Blunt Thorn режет шанс до 80%, остаток уходит в Evolution':'')}
+        ${stile('--c-cd','cd','Крит. урон',B.D.toFixed(0)+'%')}
+        ${stile('--c-add','mc','Мульти-крит',mc,'Доля ударов с мульти-критом')}
+        ${stile('--c-r','r','При крите','+'+((B.R-1)*100).toFixed(1)+'%','Урон при крите (Critical, браслет)')}
+        ${stile('--c-evo','evo','Evolution','+'+B.evo.toFixed(1)+'%')}
+      </div>
+      <div class="icons">${evo.length?evo.map(([k,v])=>evoIco(k,v,36)).join(''):'<span class="none">Evolution 2–5 тира не выбран</span>'}<span class="sep"></span>${eng.length?eng.map(([id,l])=>engIco(id,l,36)).join(''):'<span class="none">нет гравировок</span>'}</div>
+      <details class="calcfrom"><summary>От чего рассчитано</summary>
+      <div class="exw">${grp('Шанс крита','C','--c-cr',B.C)}${grp('Крит. урон','D','--c-cd',B.D)}${grp('Урон при крите','R','--c-r',(B.R-1)*100)}${grp('Evolution damage','evo','--c-evo',B.evo)}${grp('Доп. урон','add','--c-add',B.add)}${grp('Урон (множители)','dmg','--c-dmg',dmgTot)}${grp('Скорость атаки','as','--c-spd',B.as)}${grp('Скорость бега','ms','--c-spd',B.ms)}</div>
+      <p class="help" style="margin:6px 0 0">Итог: крит ×${B.m.toFixed(3)} · Evolution ×${(1+B.evo/100).toFixed(3)} · доп. урон ×${(1+B.add/100).toFixed(3)} · урон ×${X.dmg.toFixed(3)}${X.rc?` · Raid Captain ×${(1+X.rc/100*Math.max(0,B.ms)/100).toFixed(3)}`:''}.</p>${sk}</details>
+    </div>`;
   }
   const N5 = id => ({bt:'Blunt Thorn',ss:'Supersonic Breakthrough',si:'Standing Striker',mf:'MP Furnace'})[id]+' 2';
-  const evoChips = r => Object.entries(r).filter(([k,v])=>v>0 && BYID[k] && BYID[k].t>=2).sort((p,q)=>BYID[q[0]].t-BYID[p[0]].t).map(([k,v])=>`<span class="evochip" title="${esc(BYID[k].d)}">${ico(BYID[k].ic,26)}${esc(BYID[k].n)}${BYID[k].max>1?` <b>${v}</b>`:''}</span>`).join('');
   function renderSupport(cur, ar){
     const sw = SUP_T5[cls.id]||'si';
     const supR = {...Object.fromEntries(NODES.filter(n=>n.t===1&&ranks[n.id]).map(n=>[n.id,ranks[n.id]])), goddess:3, dance:2, lumin:1, prayer:1, [sw]:2};
     const same = ['goddess','dance','lumin','prayer',sw].every(k=>(ranks[k]||0)===supR[k]);
-    const dpsI = cls.paths.findIndex(p=>p.role==='dps');
     $('answer').innerHTML = `
       ${curBuildHtml(evaluate(ar,X), X, cur, ar)}
-      <div class="hero"><div class="gain">Путь саппорта<small>${esc(cls.paths[pathIdx].n)} — урон для этого пути не подбирается</small></div>
-        <div class="btns">${same?'':'<button type="button" class="primary" id="applySup">Поставить билд саппорта</button>'}${dpsI>=0?`<button type="button" id="goDps">Перейти на ДД-путь (${esc(cls.paths[dpsI].n)})</button>`:''}</div></div>
-      <div class="bline"><span class="lbl">Evolution</span><div class="evochips">${evoChips(supR)}</div></div>
+      <div class="card2"><div class="hero"><div class="gain">Путь саппорта<small>${esc(cls.paths[pathIdx].n)} — урон для этого пути не подбирается</small></div>
+        <div class="btns">${same?'':'<button type="button" class="primary" id="applySup">Поставить билд саппорта</button>'}</div></div>
+      <div class="bline"><span class="lbl">Evolution</span><div class="icons">${Object.entries(supR).filter(([k,v])=>v>0&&BYID[k]&&BYID[k].t>=2).sort((p,q)=>BYID[q[0]].t-BYID[p[0]].t).map(([k,v])=>evoIco(k,v,36,(ranks[k]||0)===v?'ok':'add')).join('')}</div></div>
       <div class="bline"><span class="lbl">Почему</span><div class="help" style="font-size:14px">Так собирают саппортов топ-игроки (Official Armory): Goddess of Blessings 3 даёт пати +9% скорости, Passionate Dance 2 — +14% Evolution damage, Luminary и Prayer усиливают бафф атаки союзников. В 5 тире у ${esc(cls.n)} чаще ${esc(BYID[sw].n)}.</div></div>
-      <div class="bline"><span class="lbl">Синергия</span><div class="help" style="font-size:14px">${esc(synTxt(cls.syn))}. На дилерском пути у этого класса баффы для пати (клейма, ауры, скорость) работают только на себя или отключаются — поэтому как тиммейт выбирайте «${esc(cls.n)} (саппорт)», если он играет саппортом.</div></div>`;
+      <div class="bline"><span class="lbl">Синергия</span><div class="help" style="font-size:14px">${esc(synTxt(cls.syn))}. На дилерском пути у этого класса баффы для пати (клейма, ауры, скорость) работают только на себя или отключаются — поэтому как тиммейт выбирайте «${esc(cls.n)} (саппорт)», если он играет саппортом.</div></div></div>`;
     if($('applySup')) $('applySup').addEventListener('click',()=>{ ranks=supR; store.set('apRanks3',ranks); renderTree(); recompute(); });
-    if($('goDps')) $('goDps').addEventListener('click',()=>{ switchPath(dpsI); recompute(); });
-    $('q_pathcmp').innerHTML='';
     $('mbar').innerHTML='';
     updSummaries(); renderT5(ar); update();
   }
@@ -1709,7 +1830,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     const opts=T5INFO.map(o=>({...o, ev:evaluate(swap5(ar,o.id),X)}));
     const best=Math.max(...opts.map(o=>o.ev.core));
     $('t5').innerHTML=opts.map(o=>{ const isB=o.ev.core>=best-1e-12, mine=B.t5===o.id;
-      return `<tr class="${isB?'best':''} ${mine?'mine':''}"><td>${ico(BYID[o.id].ic,28)} ${o.n}${mine?' <span class="tag off">ВЫБРАН</span>':''}</td><td class="n">${o.ev.ce.toFixed(1)}%</td><td class="n">${o.ev.t5==='bt'?'нет':pct(Math.max(0,Math.min(1,o.ev.ce/100-1)),1)}</td><td class="n">${o.ev.evo.toFixed(1)}%</td><td class="n">${mul(o.ev.m)}</td><td class="n">${mul(o.ev.core)}</td><td class="n ${isB?'good':'bad'}">${isB?'лучший':sign(o.ev.core/best-1)}</td></tr>`; }).join('');
+      return `<tr class="${isB?'best':''} ${mine?'mine':''}"><td><span style="display:inline-flex;align-items:center;gap:8px">${evoIco(o.id,2,28,'',o.n)}${o.n}${mine?' <span class="tag off">ВЫБРАН</span>':''}</span></td><td class="n">${o.ev.ce.toFixed(1)}%</td><td class="n">${o.ev.t5==='bt'?'нет':pct(Math.max(0,Math.min(1,o.ev.ce/100-1)),1)}</td><td class="n">${o.ev.evo.toFixed(1)}%</td><td class="n">${mul(o.ev.m)}</td><td class="n">${mul(o.ev.core)}</td><td class="hv" style="${heatBg(o.ev.core/best-1)}">${isB?'лучший':sign(o.ev.core/best-1)}</td></tr>`; }).join('');
     const bt=opts[0], bo=opts.slice(1).reduce((a,o)=>o.ev.core>a.ev.core?o:a);
     let be=null, prev=null;
     for(let c=80;c<=400;c+=0.1){ const d=evaluate(swap5(ar,'bt'),X,c).core - evaluate(swap5(ar,bo.id),X,c).core; if(prev!==null&&Math.sign(d)!==Math.sign(prev)){be=c;break} prev=d; }
@@ -1742,6 +1863,7 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     N.addEventListener('input',()=>{const v=parseFloat(N.value); if(!isNaN(v)){Rg.value=v;manual();update()}});
     return ()=>{const v=parseFloat(N.value); const x=isNaN(v)?parseFloat(Rg.value):v; O.textContent=fmt(x); return x;};
   }
+  ['t5evo','t5as','t5ms','t5mp','t5stk'].forEach(id=>$(id).addEventListener('input',()=>{ $('link').checked=false; update(); }));
   const gCr=bind('cr','crN','crO',v=>v+'%'), gCd=bind('cd','cdN','cdO',v=>v+'%'), gR=bind('rr','rrN','rrO',v=>'+'+v+'%'), gSyn=bind('syn','synN','synO',v=>'+'+v+'%');
   document.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{ const [c,d,r]=b.dataset.p.split(','); $('link').checked=false; setPair('cr','crN',c); setPair('cd','cdN',d); setPair('rr','rrN',r); update(); }));
   $('link').addEventListener('change',()=>{ if($('link').checked) recompute(); });
@@ -1757,8 +1879,22 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
     $('aRate').textContent=pct(mR,2); $('aShare').textContent=pct(mD/E,2);
     const ec=M(C+S,D,R)/E-1, ed=M(C,D+S,R)/E-1;
     $('synCmp').innerHTML=kpi(`+${(S*100).toFixed(0)}% шанса крита`, sign(ec), `R·(D−1) = ${(R*(D-1)).toFixed(2)}`, ec>ed?'main':'')+kpi(`+${(S*100).toFixed(0)}% крит. урона`, sign(ed), `R·C = ${(R*Math.max(C,0)).toFixed(2)}`, ed>ec?'main':'');
-    const btE = M(Math.min(C,0.8),D,R)*(1+0.19+1.4*Math.max(0,C-0.8));
-    $('specOut').innerHTML = kpi('Blunt Thorn Lv.2', mul(btE), `Evo +${pct(0.19+1.4*Math.max(0,C-0.8),1)}, без другого Evo`) + kpi('Paradise', mul(Math.max(0,D-0.75)*(1+0.5*C)), '(D−0.75)(1+0.5C)') + kpi('Always Critical Hit', mul(R*D*(1+0.6*C)), 'R·D·(1+0.6C)');
+    // Tier 5 choice at these stats: chance before the Blunt Thorn cap, Evolution from everything else
+    const linked = $('link').checked && B && X;
+    const Craw = linked ? B.C/100 : C;
+    const Eo = num('t5evo'), aS=num('t5as'), mS=num('t5ms'), mp=num('t5mp'), stk=Math.max(0,Math.min(6,num('t5stk',6)));
+    const t5r = T5INFO.map(o=>{ let cc=Craw, e5=0;
+      if(o.id==='bt'){ cc=Math.min(Craw,0.8); e5=19+140*Math.max(0,Craw-0.8); }
+      if(o.id==='ss') e5=evoSSp(aS,mS,2);
+      if(o.id==='si') e5=12+1.5*stk;
+      if(o.id==='mf') e5=Math.min(24,0.05*mp);
+      const m=M(cc,D,R); return {...o, cc, e5, m, tot:m*(1+(Eo+e5)/100)}; });
+    const t5b=Math.max(...t5r.map(o=>o.tot));
+    $('t5calc').innerHTML = [...t5r].sort((p,q)=>q.tot-p.tot).map(o=>{ const v=o.tot/t5b-1, isB=v>-1e-9;
+      return `<tr class="${isB?'best':''}"><td><span style="display:inline-flex;align-items:center;gap:8px">${evoIco(o.id,2,30,'',o.n)}<b>${o.n}</b></span></td><td class="n">${pct(o.cc,1)}${o.id==='bt'&&Craw>0.8?' <span class="help">(из '+pct(Craw,1)+')</span>':''}</td><td class="n">${o.id==='bt'?'нет':pct(Math.max(0,Math.min(1,o.cc-1)),1)}</td><td class="n">+${(Eo+o.e5).toFixed(1)}% <span class="help">(узел ${o.e5.toFixed(1)})</span></td><td class="n">${mul(o.tot)}</td><td class="hv" style="${heatBg(v)}">${isB?'лучший':sign(v)}</td></tr>`; }).join('');
+    const w=t5r.reduce((a,o)=>o.tot>a.tot?o:a);
+    $('t5calcNote').innerHTML = `При этих статах берите <b>${w.n}</b>. Итог = крит-множитель × (1 + Evolution). ${linked?'Значения взяты из конструктора билда (шанс — до среза Blunt Thorn).':'Значения введены вручную.'} Свои бонусы скиллов (триподы) учитывает конструктор билда.`;
+    $('specOut').innerHTML = kpi('Paradise', mul(Math.max(0,D-0.75)*(1+0.5*C)), '(D−0.75)(1+0.5C)') + kpi('Always Critical Hit', mul(R*D*(1+0.6*C)), 'R·D·(1+0.6C)');
   }
   $('simBtn').addEventListener('click',()=>{
     const C=gCr()/100, D=gCd()/100, R=1+gR()/100, N=10000, L=layers(C); let tot=0, mc=0, md=0;
@@ -1781,12 +1917,13 @@ details.set summary:focus-visible{outline:2px solid var(--accent);outline-offset
   }
 
   $('charPanel').addEventListener('input',e=>{ if(e.target.matches('input[type=number]')) recompute(); });
-  $('v-build').addEventListener('change',e=>{ if(e.target.matches('#s_mana')) $('mpField').hidden=!$('s_mana').checked; if(e.target.matches('#c_t1, #c_t2, #c_t3, #c_dance, #s_mana, #s_back, #s_head, #stA, #stB, #s_bysk, #s_part')) recompute(); });
+  $('v-build').addEventListener('change',e=>{ if(e.target.matches('#c_t1, #c_t2, #c_t3')) partyEmb(); if(e.target.matches('#s_mana')) $('mpField').hidden=!$('s_mana').checked; if(e.target.matches('#c_t1, #c_t2, #c_t3, #c_dance, #s_mana, #s_back, #s_head, #stA, #stB, #s_bysk, #s_part')) recompute(); });
   $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp, #g_crit_br, #g_crit_ot, #g_swift_br, #g_swift_ot')) recompute(); });
   $('charPanel').addEventListener('change',e=>{ if(e.target.matches('input[type=checkbox], #c_t1, #c_t2, #c_t3, #br1, #br2, #br3, #bc1, #bc2, #bc3')) recompute(); });
 
   // import panel: file of the saved page, drag & drop, or pasted page source
-  const showImp = (res, who) => { $('impMsg').innerHTML = `<p class="good" style="margin:6px 0 2px"><b>Загружено${who?' — '+esc(who):''}:</b> ${res.log.map(esc).join('; ')}.</p>` + (res.warn.length?`<p class="help" style="margin:0">Внимание: ${res.warn.map(esc).join('; ')}.</p>`:''); };
+  const showImp = (res, who) => { $('impMsg').innerHTML = `<div class="okline good"><span class="emb" style="${emb(cls.emb,28)}"></span><span>Загружено —</span><b>${esc(who||cls.n)}</b></div>`
+      + `<details class="why adv-only"><summary>Что загружено</summary><p class="help" style="margin:4px 0 0">${res.log.map(esc).join('; ')}.</p>${res.warn.length?`<p class="help" style="margin:4px 0 0">Внимание: ${res.warn.map(esc).join('; ')}.</p>`:''}</details>`; };
   const impFail = msg => { $('impMsg').innerHTML = `<p class="bad" style="margin:6px 0 0">${esc(msg)}</p>`; };
   function importHtml(html){
     if(!/profile-character-info|\$\.Profile/.test(html)) return impFail('Это не страница персонажа из Оружейной. Откройте персонажа на лостарк.рф и сохраните страницу ещё раз.');

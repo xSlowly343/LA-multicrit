@@ -771,7 +771,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
           <label>Урон, %<input type="number" id="g_grDmg" min="-30" max="40" step="0.01" value="0"></label>
           <label>Доп. урон, %<input type="number" id="g_grAdd" min="0" max="40" step="0.01" value="0"></label>
         </div>
-        <p class="help" style="margin-top:6px">Сумма активных эффектов ядер Хаоса и рунитов: «урон, наносимый критическими ударами» ядра Солнца Хаоса считается уроном при крите (как Critical — один раз даже при мульти-крите); урон, урон по боссам и сила атаки — множителем урона; доп. урон рунитов — как доп. урон. Крит. урон и шанс крита скиллов из ядер Порядка добавляются к этим скиллам. При загрузке персонажа заполняется само.</p>
+        <p class="help" style="margin-top:6px">Редкость ядра (рамка): эпическое и легендарное открывают только пороги 10 и 14 оч., реликвия и древнее — 10, 14, 17–20; у древнего эффект 17 оч. сильнее, а заряд больше. Руниты сверх заряда ядра не работают. Сумма активных эффектов ядер Хаоса и рунитов: «урон, наносимый критическими ударами» ядра Солнца Хаоса считается уроном при крите (как Critical — один раз даже при мульти-крите); урон, урон по боссам и сила атаки — множителем урона; доп. урон рунитов — как доп. урон. Крит. урон и шанс крита скиллов из ядер Порядка добавляются к этим скиллам. При загрузке персонажа заполняется само.</p>
       </div>
     </details>
     <details class="set" id="setSk">
@@ -1389,7 +1389,11 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     const cores=[], tot={R:0,dmg:0,atk:0,add:0,boss:0,C:0}, perSkill=[];
     const num=x=>parseFloat(String(x).replace(',','.'))||0;
     (grid||[]).filter(([k])=>/_\d{3}$/.test(k) && !/_\d{3}_\d{3}$/.test(k)).forEach(([k,t])=>{
-      const gems=(grid||[]).filter(([g])=>g.startsWith(k+'_')).map(([,gt])=>{
+      // core charge (willpower) depends on rarity; runites are powered in slot order while the charge lasts
+      const capW=+(((t.match(/(?:Максимальный заряд|코어 공급 의지력) \| (\d+)/)||[])[1])||0); let usedW=0, offG=0;
+      const gems=(grid||[]).filter(([g])=>g.startsWith(k+'_')).sort((p,q)=>p[0]<q[0]?-1:1).map(([,gt])=>{
+        const cost=+(((gt.match(/(?:Требуемый заряд|필요 의지력)\s*:\s*(\d+)/)||[])[1])||0);
+        if(capW && usedW+cost>capW){ offG++; return {pts:0, st:[], off:1}; } usedW+=cost;
         const pts=+(((gt.match(/(?:Очки (?:Порядка|Хаоса)|(?:질서|혼돈) 포인트)\s*:\s*(\d+)/)||[])[1])||0);
         const st=[...gt.matchAll(/\[([^\]]+)\]\s*(?:ур\.|Lv\.)\s*(\d+)\s*([^\[|]*?)\+\s*([\d.,]+)\s*%/g)].map(m=>[m[1].trim(),+m[2],num(m[4])]);
         st.forEach(([n,,v])=>{ if(/Доп\. урон|추가 피해/.test(n)) tot.add+=v; else if(/по боссам|보스/.test(n)) tot.boss+=v; else if(/^(Сила атаки|공격력)$/.test(n)) tot.atk+=v; });
@@ -1413,7 +1417,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
           else if(/^\s*(?:Сила атаки повышается|공격력이)/.test(pt) && /%/.test(pt)) fx.atk+=sg*v;
           else if(/^\s*(?:Шанс критического удара повышается|치명타 적중률이)/i.test(pt)) fx.C+=sg*v; }); }
       ['R','dmg','atk','C'].forEach(q=>tot[q]+=fx[q]);
-      cores.push({name, type, grade, ic, pts, act, fx, gems:gems.length}); });
+      cores.push({name, type, grade, ic, pts, act, fx, gems:gems.length, capW, usedW, offG}); });
     return {cores, tot, perSkill};
   }
   let skCustom = store.get('skCustom1') || {};
@@ -1509,7 +1513,8 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       const sk=skCustom[cls.id+':'+pathIdx]; let nPS=0;
       if(sk) G.perSkill.forEach(e=>sk.forEach(k=>{ if(e.names.includes(k.n)){ k.eff=[...(k.eff||[]),{C:e.C||0,D:e.D||0,core:e.core}]; nPS++; } }));
       if(sk) store.set('skCustom1',skCustom);
-      saved.grid={cls:cls.id, cores:G.cores.map(c=>({n:c.name,t:c.type,g:c.grade,ic:c.ic,p:c.pts,a:c.act.map(x=>x[0]),fx:c.fx})), tot:G.tot};
+      saved.grid={cls:cls.id, cores:G.cores.map(c=>({n:c.name,t:c.type,g:c.grade,ic:c.ic,p:c.pts,a:c.act.map(x=>x[0]),fx:c.fx,w:c.capW,u:c.usedW,off:c.offG})), tot:G.tot};
+      const offT=G.cores.filter(c=>c.offG).map(c=>`${c.name}: ${c.offG}`); if(offT.length) warn.push('руниты не помещаются в заряд ядра и не работают — '+offT.join(', '));
       log.push(`ядра: ${G.cores.length}, урон при крите +${G.tot.R.toFixed(2)}%, урон +${(mul*100).toFixed(2)}%, доп. урон рунитов +${G.tot.add.toFixed(2)}%${nPS?`, крит скиллов из ядер Порядка: ${nPS}`:''}`);
     } else { saved.grid=null; ['g_grR','g_grDmg','g_grAdd'].forEach(id=>$(id).value=0); }
     renderGrid();
@@ -1846,14 +1851,16 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   }
   // cores.png: Order Sun, Moon, Star, Chaos Sun, Moon, Star (Smilegate icons use_13_96…101)
   const coreIdx = c => { const m=/use_13_(\d+)/.exec(c.ic||''); if(m && +m[1]>=96 && +m[1]<=101) return +m[1]-96; const t=c.t||''; return (/Хаос|혼돈/.test(t)?3:0) + (/Лун|달/.test(t)?1:/Звезд|별/.test(t)?2:0); };
-  const coreImg = (c,size) => `<span class="eic" style="background-image:url(cores.png);width:${size}px;height:${size}px;background-size:${6*size}px ${size}px;background-position:-${coreIdx(c)*size}px 0;border-radius:50%"></span>`;
+  const GRADE_C = {'Эпическое':'#A855F7','Легендарное':'#F59E0B','Реликвия':'#EA580C','Древнее':'#D6C08E'};
+  const coreRing = c => `box-shadow:0 0 0 2px ${GRADE_C[c.g]||'transparent'}`;
+  const coreImg = (c,size) => `<span class="eic" style="background-image:url(cores.png);width:${size}px;height:${size}px;background-size:${6*size}px ${size}px;background-position:-${coreIdx(c)*size}px 0;border-radius:50%;${coreRing(c)}"></span>`;
   const gridOf = () => (saved.grid && saved.grid.cls===cls.id) ? saved.grid : null;
   const coreFx = c => [c.fx&&c.fx.R?`урон при крите +${+c.fx.R.toFixed(2)}%`:'', c.fx&&c.fx.dmg?`урон ${c.fx.dmg>0?'+':''}${+c.fx.dmg.toFixed(2)}%`:'', c.fx&&c.fx.atk?`сила атаки +${+c.fx.atk.toFixed(2)}%`:''].filter(Boolean).join(' · ');
   function coreIco(c, size=36){ const t=`${c.n} — ${c.g||''} ${c.t}, ${c.p} оч. (пороги ${c.a.join(', ')||'нет'})${coreFx(c)?'. '+coreFx(c):''}`;
     return `<span class="ib" title="${esc(t)}" aria-label="${esc(t)}">${coreImg(c,size)}${c.p?`<em>${c.p}</em>`:''}</span>`; }
   function renderGrid(){
     const g=gridOf();
-    $('gridCores').innerHTML = g ? g.cores.map(c=>`<div class="gcore">${coreImg(c,36)}<b>${esc(c.n)}</b><span class="pt">${c.p} оч.</span><span class="fx">${esc(c.t)}${c.g?' · '+esc(c.g):''} · пороги: ${c.a.join(', ')||'нет'}${coreFx(c)?' · '+esc(coreFx(c)):''}</span></div>`).join('') : '<p class="help" style="margin:0">Загрузите персонажа по нику — ядра и руниты подтянутся из Оружейной. Или впишите суммы вручную.</p>';
+    $('gridCores').innerHTML = g ? g.cores.map(c=>`<div class="gcore">${coreImg(c,36)}<b>${esc(c.n)}</b><span class="pt">${c.p} оч.</span><span class="fx">${esc(c.t)}${c.g?` · <b style="color:${GRADE_C[c.g]||'inherit'}">${esc(c.g)}</b>`:''}${c.w?` · заряд ${c.u}/${c.w}`:''}${c.off?` · <span class="bad">${c.off} рунит. не активн.</span>`:''} · пороги: ${c.a.join(', ')||'нет'}${coreFx(c)?' · '+esc(coreFx(c)):''}</span></div>`).join('') : '<p class="help" style="margin:0">Загрузите персонажа по нику — ядра и руниты подтянутся из Оружейной. Или впишите суммы вручную.</p>';
     $('sumGrid').textContent = (g?g.cores.length+' ядер · ':'')+`при крите +${num('g_grR')}% · урон +${num('g_grDmg')}% · доп. +${num('g_grAdd')}%`;
   }
   function updSummaries(){

@@ -1405,6 +1405,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       eng:[...doc.querySelectorAll('.profile-ability-engrave li')].map(li=>{ const sp=q(li,'span'); return [s(sp&&q(sp,'font')&&q(sp,'font').textContent), sp?sp.innerHTML:'']; }),
       equip:Object.entries(P.Equip||{}).map(([k,v])=>[T(v&&v.Element_000&&v.Element_000.value), flat(v), k]).filter(e=>/^E[0-9a-f]+_\d{3}$/i.test(e[2]) ? /_0(0[6-9]|10|26)$/.test(e[2]) : /목걸이|귀걸이|반지|팔찌|ожерелье|серьг|кольц|браслет/i.test(e[0])), // by Armory slot (avatar «Серьги …» sit in other slots); by name only without a slot key
       baseAtk:intR((html.match(/(?:Базовая сила атаки составляет|기본 공격력은?)\s*(?:<[^>]+>\s*)*([\d\s,]+)/)||[])[1]||''),
+      gems:Object.entries(P.Equip||{}).filter(([k])=>/Gem_\d+$/i.test(k)).map(([,v])=>flat(v)),
       grid:Object.entries(P.ArkGrid||{}).map(([k,v])=>[k, flat(v)]),
       // runites the Armory marks as powered (class «active» on the slot); empty for older saved pages
       gridOn:[...doc.querySelectorAll('.arkgrid__slot_list [class*="gem_slot"][data-item]')].map(el=>[el.getAttribute('data-item'), el.classList.contains('active')]),
@@ -1492,6 +1493,19 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       ['R','dmg','atk','C','D','as','ae','de','st'].forEach(q=>tot[q]+=fx[q]); tot.add+=fx.add;
       cores.push({name, type, grade, ic, pts, act, fx, gems:gems.length, capW, usedW, offG}); });
     return {cores, tot, perSkill};
+  }
+  // gems: skill damage (неумолимый рок / 겁화), cooldown (предвечный огонь / 작열), «чистое сияние» (광휘) either; extra: base attack %, support effect %
+  function gemParse(t){
+    const n=(t.split(' | ')[1]||'').trim();
+    const lv=+((n.match(/\(ур\.\s*(\d+)\)|(\d+)레벨/)||[]).slice(1).find(Boolean)||0);
+    const ef=(t.split(/Эффект \||효과 \|/)[1]||t);
+    const sk=((ef.match(/\[[^\]]+\]\s*([^:]+?)\s*:/)||ef.match(/\[[^\]]+\]\s*(.+?)\s+(?:피해|재사용)/)||[])[1]||'').trim();
+    const num=x=>parseFloat(String(x||'').replace(',','.'))||0;
+    const dmg=num((ef.match(/урон повышается на\s*([\d.,]+)\s*%|피해\s*([\d.,]+)%\s*증가/)||[]).slice(1).find(Boolean));
+    const cd=num((ef.match(/время восстановления сокращается на\s*([\d.,]+)\s*%|재사용 대기시간\s*([\d.,]+)%\s*감소/)||[]).slice(1).find(Boolean));
+    const sup=[...ef.matchAll(/\[[^\]]+\]\s*([^:\[]+?)\s*:\s*эффект поддержки повышается на\s*([\d.,]+)\s*%/g)].map(m=>[m[1].trim(),num(m[2])]);
+    const ba=num((ef.match(/Базовая сила атаки повышается на\s*([\d.,]+)\s*%|기본 공격력\s*([\d.,]+)%\s*증가/)||[]).slice(1).find(Boolean));
+    return {n, lv, sk, dmg, cd, sup, ba};
   }
   let skCustom = store.get('skCustom1') || {};
   function applyImport(d){

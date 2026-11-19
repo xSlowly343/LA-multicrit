@@ -1310,7 +1310,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   function setGrid(open){ $('clsGrid').hidden=!open; $('clsToggle').setAttribute('aria-expanded',String(open)); }
   $('clsToggle').addEventListener('click',()=>setGrid($('clsGrid').hidden));
   function renderClsGrid(){
-    $('clsGrid').innerHTML = CLASSES.map(c=>`<button type="button" class="clsbtn" data-cg="${c.id}" aria-pressed="${c.id===cls.id}"><span class="emb" style="${emb(c.emb,26)}"></span>${esc(c.n)}</button>`).join('');
+    $('clsGrid').innerHTML = CLASSES.filter(c=>role!=='sup'||SUPCLS.includes(c.id)).map(c=>`<button type="button" class="clsbtn" data-cg="${c.id}" aria-pressed="${c.id===cls.id}"><span class="emb" style="${emb(c.emb,26)}"></span>${esc(c.n)}</button>`).join('');
     $('clsGrid').querySelectorAll('[data-cg]').forEach(b=>b.addEventListener('click',()=>{ setGrid(false); if(b.dataset.cg===cls.id) return; $('c_class').value=b.dataset.cg; $('c_class').dispatchEvent(new Event('change')); }));
     $('clsName').textContent = cls.n;
   }
@@ -1325,12 +1325,28 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     $('skInfo').textContent = `По 4 профилям ${cls.n}: ${Math.round(sk.mana*100)}% скиллов тратят ману${sk.mp?` (медиана ${sk.mp})`:''}, ${Math.round(sk.back*100)}% бьют в спину, ${Math.round(sk.head*100)}% в голову. Галочки выставлены по большинству, их можно поменять.`;
     loadClassState(); renderClassTrees(); renderClsGrid();
   }
-  $('c_class').addEventListener('change',()=>{ saveChar(); cls=ALLC[$('c_class').value]; setClass(); recompute(); });
+  $('c_class').addEventListener('change',()=>{ saveChar(); cls=ALLC[$('c_class').value]; setClass(); fitRole(); recompute(); });
+  // role: dealer or support. Support mode lists the four support classes and keeps them on the support path
+  const SUPCLS=['bard','paladin','artist','valkyrie'];
+  let role = saved.role || (isSupPathOf(cls,pathIdx)?'sup':'dps');
+  function fitRole(){
+    const si=cls.paths.findIndex(p=>p.role==='sup');
+    if(role==='sup' && si>=0 && !isSupPathOf(cls,pathIdx)) switchPath(si);
+    if(role==='dps' && isSupPathOf(cls,pathIdx)) switchPath(dpsDefault(cls));
+  }
+  function applyRole(){
+    document.body.classList.toggle('sup', role==='sup');
+    $('q_role').querySelectorAll('[data-role]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.role===role)));
+    saved.role=role;
+    if(role==='sup' && !SUPCLS.includes(cls.id)){ $('c_class').value='bard'; saveChar(); cls=ALLC.bard; setClass(); }
+    fitRole(); renderClsGrid();
+  }
+  $('q_role').addEventListener('click',e=>{ const b=e.target.closest('[data-role]'); if(!b||b.dataset.role===role) return; role=b.dataset.role; applyRole(); recompute(); });
 
   function saveChar(){
     const acc=SLOTS.map((sl,si)=>[0,1,2].map(li=>[$(`a${si}_${li}`).value,+$(`a${si}_${li}g`).value]));
     saved.cs3 = saved.cs3 || {}; lvByPath[pathIdx]={...lv}; bldByPath[pathIdx]={r:{...ranks}, e:[0,1,2,3,4].map(k=>[$('e'+k).value,+$('e'+k+'l').value])}; saved.cs3[cls.id] = {p:pathIdx,l:{...lv},lp:JSON.parse(JSON.stringify(lvByPath)),bp:JSON.parse(JSON.stringify(bldByPath)),sk:{mana:$('s_mana').checked,back:$('s_back').checked,head:$('s_head').checked,mp:$('s_mp').value}};
-    Object.assign(saved,{cls:cls.id,team:['c_t1','c_t2','c_t3'].map(id=>$(id).value),acc,br:['br1','br2','br3'].map(id=>$(id).value),eng:[0,1,2,3,4].map(i=>[$('e'+i).value,+$('e'+i+'l').value]),locks:[0,1,2,3,4].map(isLocked),st:[num('stA',2),num('stB',2)]});
+    Object.assign(saved,{role,cls:cls.id,team:['c_t1','c_t2','c_t3'].map(id=>$(id).value),acc,br:['br1','br2','br3'].map(id=>$(id).value),eng:[0,1,2,3,4].map(i=>[$('e'+i).value,+$('e'+i+'l').value]),locks:[0,1,2,3,4].map(isLocked),st:[num('stA',2),num('stB',2)]});
     saved.inp = Object.fromEntries(INP().map(i=>[i.id, i.type==='checkbox'?i.checked:i.value]));
     store.set('charState6',saved);
   }
@@ -1385,6 +1401,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       nodes:[...doc.querySelectorAll('.profile-skill-arkpassive__item')].map(el=>[el.classList.contains('evolution')?'evo':el.classList.contains('enlightenment')?'enl':'leap', s((q(el,'.profile-arkpassive__info')||{}).textContent), file(q(el,'.profile-arkpassive__slot img'))]).filter(n=>{ const k=n.join('|'); if(seen.has(k)) return false; seen.add(k); return true; }),
       eng:[...doc.querySelectorAll('.profile-ability-engrave li')].map(li=>{ const sp=q(li,'span'); return [s(sp&&q(sp,'font')&&q(sp,'font').textContent), sp?sp.innerHTML:'']; }),
       equip:Object.entries(P.Equip||{}).map(([k,v])=>[T(v&&v.Element_000&&v.Element_000.value), flat(v), k]).filter(e=>/^E[0-9a-f]+_\d{3}$/i.test(e[2]) ? /_0(0[6-9]|10|26)$/.test(e[2]) : /목걸이|귀걸이|반지|팔찌|ожерелье|серьг|кольц|браслет/i.test(e[0])), // by Armory slot (avatar «Серьги …» sit in other slots); by name only without a slot key
+      baseAtk:intR((html.match(/(?:Базовая сила атаки составляет|기본 공격력은?)\s*(?:<[^>]+>\s*)*([\d\s,]+)/)||[])[1]||''),
       grid:Object.entries(P.ArkGrid||{}).map(([k,v])=>[k, flat(v)]),
       // runites the Armory marks as powered (class «active» on the slot); empty for older saved pages
       gridOn:[...doc.querySelectorAll('.arkgrid__slot_list [class*="gem_slot"][data-item]')].map(el=>[el.getAttribute('data-item'), el.classList.contains('active')]),
@@ -1415,7 +1432,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   // Ark Grid (ядра и руниты): core points = sum of the runites' Order/Chaos points; effects unlock at 10/14 (Legendary and below) or up to 20 (Relic, Ancient)
   function gridAnalyze(grid, gridOn){
     const onMap=Object.fromEntries(gridOn||[]);
-    const cores=[], tot={R:0,dmg:0,atk:0,add:0,boss:0,C:0,D:0,as:0}, perSkill=[];
+    const cores=[], tot={R:0,dmg:0,atk:0,add:0,boss:0,C:0,D:0,as:0,ae:0,de:0,st:0}, perSkill=[];
     const num=x=>parseFloat(String(x).replace(',','.'))||0;
     (grid||[]).filter(([k])=>/_\d{3}$/.test(k) && !/_\d{3}_\d{3}$/.test(k)).forEach(([k,t])=>{
       // core charge (willpower) depends on rarity; runites are powered in slot order while the charge lasts
@@ -1427,7 +1444,8 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         if(off){ offG++; return {pts:0, st:[], off:1}; } usedW+=cost;
         const pts=+(((gt.match(/(?:Очки (?:Порядка|Хаоса)|(?:질서|혼돈) 포인트)\s*:\s*(\d+)/)||[])[1])||0);
         const st=[...gt.matchAll(/\[([^\]]+)\]\s*(?:ур\.|Lv\.)\s*(\d+)\s*([^\[|]*?)\+\s*([\d.,]+)\s*%/g)].map(m=>[m[1].trim(),+m[2],num(m[4])]);
-        st.forEach(([n,,v])=>{ if(/Доп\. урон|추가 피해/.test(n)) tot.add+=v; else if(/по боссам|보스/.test(n)) tot.boss+=v; else if(/^(Сила атаки|공격력)$/.test(n)) tot.atk+=v; });
+        st.forEach(([n,,v])=>{ if(/Доп\. урон|추가 피해/.test(n)) tot.add+=v; else if(/по боссам|보스/.test(n)) tot.boss+=v; else if(/^(Сила атаки|공격력)$/.test(n)) tot.atk+=v;
+          else if(/Сила атаки соратников|아군 공격력/.test(n)) tot.ae+=v; else if(/Урон соратников|아군 피해/.test(n)) tot.de+=v; else if(/Эффективность стигмы|낙인력/.test(n)) tot.st+=v; });
         return {pts, st}; });
       const name=(t.split(' | ')[1]||'').trim();
       const type=((t.match(/(?:Тип ядра|코어 타입) \| ([^|]+)/)||[])[1]||'').trim();
@@ -1435,7 +1453,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       const grade=/Древн|고대/.test(t)?'Древнее':/Реликви|유물/.test(t)?'Реликвия':/Легендар|전설/.test(t)?'Легендарное':/Эпич|영웅/.test(t)?'Эпическое':'';
       const pts=gems.reduce((a,g)=>a+g.pts,0), cap=/Эпич/.test(grade)?10:/Легендар/.test(grade)?14:20; // Epic: 10; Legendary: 10, 14; Relic and Ancient: up to 20
       const effT=((t.split(/(?:Эффект ядра|코어 옵션) \| /)[1]||'').split(' | ')[0]);
-      const parts=effT.split(/\[(\d+)\s*(?:оч\.|P)\]/); const act=[], fx={R:0,dmg:0,atk:0,C:0,D:0,add:0,as:0}; let burn=0, burnInc=0, markD=0;
+      const parts=effT.split(/\[(\d+)\s*(?:оч\.|P)\]/); const act=[], fx={R:0,dmg:0,atk:0,C:0,D:0,add:0,as:0,ae:0,de:0,st:0}; let burn=0, burnInc=0, markD=0;
       for(let i=1;i<parts.length;i+=2){ const thr=+parts[i], txt=parts[i+1].trim(); if(thr>Math.min(pts,cap)) continue; act.push([thr,txt]);
         const timed=/«Предназначение:|'운명:|‘운명:/.test(txt); // a temporary «Предназначение: …» buff: only its named skills count
         txt.split(/\.\s|;|, а |, но |하지만|하고,|고,/).forEach(pt=>{
@@ -1448,6 +1466,10 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
           if(!v || /в течение|초 동안|сек\./.test(pt) && !/«/.test(pt)) return;
           const sg=neg?-1:1, names=[...pt.matchAll(/«([^»]+)»/g)].map(m=>m[1]).filter(x=>!/^Предназначение|^운명/.test(x));
           if(timed && !names.length && !/ожог|화상/i.test(pt)) return;
+          // support cores: ally attack / damage buff efficiency, stigma efficiency
+          if(/(?:увеличения|усиления) силы атаки (?:союзников|соратников)|아군 공격력 강화/i.test(pt)){ fx.ae+=sg*v; return; }
+          if(/(?:увеличения|усиления) урона (?:союзников|соратников)|아군 피해량 강화/i.test(pt)){ fx.de+=sg*v; return; }
+          if(/Эффективность стигмы|낙인력/i.test(pt)){ fx.st+=sg*v; return; }
           // a skill group without named skills («элементальных умений», «умений стойки», «집중 스킬») cannot be matched to skills — skip
           if(!names.length && /умени|스킬/i.test(pt)) return;
           if(/урон, наносимый критическими ударами|치명타 시 적에게 주는 피해/i.test(pt)) fx.R+=sg*v;
@@ -1464,7 +1486,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
           else if(/^\s*(?:Урон оружия повышается|무기 공격력이)/i.test(pt) && /%/.test(pt)) fx.atk+=sg*v/2; }); }
       if(burn) fx.dmg+=burn*(1+burnInc/100);
       if(markD) fx.D+=markD;
-      ['R','dmg','atk','C','D','as'].forEach(q=>tot[q]+=fx[q]); tot.add+=fx.add;
+      ['R','dmg','atk','C','D','as','ae','de','st'].forEach(q=>tot[q]+=fx[q]); tot.add+=fx.add;
       cores.push({name, type, grade, ic, pts, act, fx, gems:gems.length, capW, usedW, offG}); });
     return {cores, tot, perSkill};
   }
@@ -1565,6 +1587,21 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       const offT=G.cores.filter(c=>c.offG).map(c=>`${c.name}: ${c.offG}`); if(offT.length) warn.push('неактивные руниты (не работают и не дают очков) — '+offT.join(', '));
       log.push(`ядра: ${G.cores.length}, урон при крите +${G.tot.R.toFixed(2)}%, урон +${(mul*100).toFixed(2)}%, доп. урон рунитов +${G.tot.add.toFixed(2)}%${nPS?`, крит скиллов из ядер Порядка: ${nPS}`:''}`);
     } else { saved.grid=null; ['g_grR','g_grDmg','g_grAdd','g_grD','g_grAs'].forEach(id=>$(id).value=0); }
+    // support: role from the path, ally buff efficiency from polish, bracelet, runites and cores
+    role = isSupPathOf(cls,pathIdx) ? 'sup' : 'dps';
+    if(role==='sup'){
+      let ae=G.tot.ae, de=G.tot.de, st=G.tot.st;
+      (d.equip||[]).forEach(([nm,txt,key])=>{ if(isBr([nm,txt,key])){ const seg=txt.split(/Эффекты браслета|팔찌 효과/).pop();
+          for(const m of seg.matchAll(/(?:Эффективность увеличения силы атаки союзников|아군 공격력 강화 효과가?)\s*(?:повышается на|\+)?\s*([\d.,]+)\s*%/g)) ae+=numR(m[1]);
+          for(const m of seg.matchAll(/(?:Эффективность увеличения урона союзников|아군 피해량 강화 효과가?)\s*(?:повышается на|\+)?\s*([\d.,]+)\s*%/g)) de+=numR(m[1]); }
+        else { const seg=(txt.split(/연마 효과|Эффект полировки/)[1]||'').split(/아크 패시브|Очки системы/)[0];
+          for(const m of seg.matchAll(/(?:Эфф\. увел\. силы атаки союзников|아군 공격력 강화 효과)\s*\+([\d.,]+)%/g)) ae+=numR(m[1]);
+          for(const m of seg.matchAll(/(?:Эфф\. увеличения урона союзников|아군 피해량 강화 효과)\s*\+([\d.,]+)%/g)) de+=numR(m[1]);
+          for(const m of seg.matchAll(/(?:Эффективность стигмы|낙인력)\s*\+([\d.,]+)%/g)) st+=numR(m[1]); } });
+      $('sp_ae').value=+ae.toFixed(2); $('sp_de').value=+de.toFixed(2); $('sp_st').value=+st.toFixed(2); $('sp_atk').value=d.baseAtk||0;
+      log.push(`саппорт: бафф атаки +${ae.toFixed(1)}%, бафф урона +${de.toFixed(1)}%, стигма +${st.toFixed(1)}%${d.baseAtk?', базовая атака '+d.baseAtk:''}`);
+    }
+    applyRole();
     renderGrid();
     saveChar(); recompute();
     return {log, warn};
@@ -1950,17 +1987,78 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     </div>`;
   }
   const N5 = id => ({bt:'Blunt Thorn',ss:'Supersonic Breakthrough',si:'Standing Striker',mf:'MP Furnace'})[id]+' 2';
+  // ---------- support mode: party damage gain by buff type ----------
+  // typical gains per DPS are from lostark.bible logs (loa-logs rDPS: relative damage increase per support buff, uptime included);
+  // your gain = typical × (your stat / typical top RU support stat) for the buffs the stat scales
+  const SUP_CATS = [
+    ['atk','Бафф атаки','bs','ae','Растёт от базовой атаки саппорта и усиления баффа атаки'],
+    ['ident','Идентити (бафф урона)','bi','de','Серенада / аура / Moonfall / освобождение; растёт от усиления баффа урона'],
+    ['brand','Клеймо','ds','st','Получаемый целью урон; растёт от эффективности стигмы'],
+    ['hat','T-скилл (бафф урона)','bh','de','Ария / Божественная справедливость / Гравировка дракона; растёт от усиления баффа урона'],
+    ['extra','Доп. бафф урона','','de','Мажорный аккорд (бард), Крылья свободы (валькирия)'],
+    ['dance','Passionate Dance','','','+14% Evolution damage пати (узел Evolution саппорта)'],
+    ['cards','Карты','','','Набор карт «Ветреный утёс» — урон стихии света'],
+    ['other','Сферы, браслет, ядра','','','Drops of Ether (сферы), браслет, ядра Ark Grid']];
+  const SUP_COL = {atk:'--c-cr', ident:'--c-add', brand:'--c-cd', hat:'--c-r', extra:'--c-dmg', dance:'--c-evo', cards:'--c-spd', other:'--muted', crit:'--accent'};
+  function supScales(){
+    const T=(DATA.supTyp||{})[cls.id]||DATA.supTyp.avg, u=k=>num('sp_'+k);
+    const v=k=>u(k)>0?u(k):T[k];
+    const atkR = u('atk')>0 && T.atk ? u('atk')/T.atk : 1;
+    return {T, ae:v('ae'), de:v('de'), st:v('st'), atk:u('atk')>0?u('atk'):T.atk,
+      s:{ae:atkR*(1+v('ae')/100)/(1+T.ae/100), de:(1+v('de')/100)/(1+T.de/100), st:(1+v('st')/100)/(1+T.st/100)}};
+  }
+  // crit buffs of the support (bracelet, Drops of Ether orbs, cores) as raw crit rate / crit damage, from their gain in the logs at a reference DPS
+  const CREF = {C:0.9, D:2.7};
+  function critGain(SD, id){
+    const M0=M(CREF.C,CREF.D,1), dc=(SD.crit.C||0)*M0/(CREF.D-1), dd=(SD.crit.D||0)*M0/CREF.C;
+    const t=(DATA.dpsTyp||{})[id]; if(!t) return null;
+    const c=t[0]/100, d=t[1]/100, bt=t[2], R=1.12;
+    const capM=(cc,dd2)=>M(Math.min(cc,1),dd2,R);
+    let g, g0;
+    if(bt){ const cc=Math.min(c,0.8), conv=1.4*Math.max(0,Math.min(dc,c+dc-0.8))/2; g=M(cc,d+dd,R)/M(cc,d,R)*(1+conv)-1; g0=g; }
+    else { g=M(c+dc,d+dd,R)/M(c,d,R)-1; g0=capM(c+dc,d+dd)/capM(c,d)-1; }
+    return {c:t[0], d:t[1], bt, g, g0, dc:dc*100, dd:dd*100};
+  }
   function renderSupport(cur, ar){
+    const SD=(DATA.sup||{})[cls.id];
     const sw = SUP_T5[cls.id]||'si';
     const supR = {...Object.fromEntries(NODES.filter(n=>n.t===1&&ranks[n.id]).map(n=>[n.id,ranks[n.id]])), goddess:3, dance:2, lumin:1, prayer:1, [sw]:2};
     const same = ['goddess','dance','lumin','prayer',sw].every(k=>(ranks[k]||0)===supR[k]);
-    $('answer').innerHTML = `
-      ${curBuildHtml(evaluate(ar,X), X, cur, ar)}
-      <div class="card2"><div class="hero"><div class="gain">Путь саппорта<small>${esc(cls.paths[pathIdx].n)} — урон для этого пути не подбирается</small></div>
-        <div class="btns">${same?'':'<button type="button" class="primary" id="applySup">Поставить билд саппорта</button>'}</div></div>
-      <div class="bline"><span class="lbl">Evolution</span><div class="icons">${Object.entries(supR).filter(([k,v])=>v>0&&BYID[k]&&BYID[k].t>=2).sort((p,q)=>BYID[q[0]].t-BYID[p[0]].t).map(([k,v])=>evoIco(k,v,36,(ranks[k]||0)===v?'ok':'add')).join('')}</div></div>
-      <div class="bline"><span class="lbl">Почему</span><div class="help" style="font-size:14px">Так собирают саппортов топ-игроки (Official Armory): Goddess of Blessings 3 даёт пати +9% скорости, Passionate Dance 2 — +14% Evolution damage, Luminary и Prayer усиливают бафф атаки союзников. В 5 тире у ${esc(cls.n)} чаще ${esc(BYID[sw].n)}.</div></div>
-      <div class="bline"><span class="lbl">Синергия</span><div class="help" style="font-size:14px">${esc(synTxt(cls.syn))}. На дилерском пути у этого класса баффы для пати (клейма, ауры, скорость) работают только на себя или отключаются — поэтому как тиммейт выбирайте «${esc(cls.n)} (саппорт)», если он играет саппортом.</div></div></div>`;
+    const evoRow = `<div class="bline"><span class="lbl">Evolution</span><div class="icons">${Object.entries(supR).filter(([k,v])=>v>0&&BYID[k]&&BYID[k].t>=2).sort((p,q)=>BYID[q[0]].t-BYID[p[0]].t).map(([k,v])=>evoIco(k,v,36,(ranks[k]||0)===v?'ok':'add')).join('')}${same?'':' <button type="button" id="applySup">Поставить</button>'}</div></div>`;
+    if(!SD){ $('answer').innerHTML=`<div class="card2"><div class="chead"><span class="emb" style="${emb(cls.emb,32)}"></span><h3>Саппорт</h3></div><p class="help">Для этого класса нет данных логов по баффам саппорта.</p>${evoRow}</div>`; }
+    else {
+      const S=supScales();
+      const rows=SUP_CATS.map(([k,n,up,st,tip])=>{ const typ=SD.cats[k]||0, sc=st?S.s[st]:1; return {k,n,tip,up:up?SD.upt[up]:null,typ,mine:typ*sc}; }).filter(r=>r.typ>0.0005);
+      const prod=a=>a.reduce((x,r)=>x*(1+r),1);
+      const P=prod(rows.map(r=>r.mine)), Pt=prod(rows.map(r=>r.typ));
+      const team=['c_t1','c_t2','c_t3'].map(id=>$(id).value).filter(v=>v && !/^sup_/.test(v));
+      const dps=team.map(id=>({id, cl:CLASSES.find(c=>c.id===id), cg:critGain(SD,id)})).filter(x=>x.cl&&x.cg);
+      const critAvg = dps.length ? dps.reduce((a,x)=>a+x.cg.g,0)/dps.length : (SD.crit.C||0)+(SD.crit.D||0);
+      const tot=P*(1+critAvg)-1, totT=Pt*(1+(SD.crit.C||0)+(SD.crit.D||0))-1, rel=(1+tot)/(1+totT)-1;
+      const maxv=Math.max(...rows.map(r=>Math.max(r.mine,r.typ)),critAvg);
+      const bar=(v,c)=>`<div class="bar" style="min-width:80px"><i style="width:${Math.max(1,v/maxv*100).toFixed(1)}%;background:var(${c})"></i></div>`;
+      const f1=x=>(x*100).toFixed(1)+'%';
+      const tbl = `<div class="tablewrap" style="border:0"><table class="cmpT"><thead><tr><th>Бафф</th><th>Аптайм</th><th>Топ-саппорт</th><th>Вы</th><th></th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td title="${esc(r.tip)}"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(${SUP_COL[r.k]});margin-right:6px"></span>${esc(r.n)}</td><td class="n">${r.up!=null?Math.round(r.up*100)+'%':'—'}</td><td class="n">+${f1(r.typ)}</td><td class="hv" style="${heatBg(r.mine/Math.max(r.typ,1e-9)-1,0.15)}">+${f1(r.mine)}</td><td>${bar(r.mine,SUP_COL[r.k])}</td></tr>`).join('')}
+        <tr><td title="Шанс и крит. урон от браслета, сфер и ядер; ценность зависит от крита ДД — с мульти-критом шанс выше 100% не пропадает"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--accent);margin-right:6px"></span>Крит (браслет, сферы, ядра)</td><td class="n">—</td><td class="n">+${f1((SD.crit.C||0)+(SD.crit.D||0))}</td><td class="hv" style="${heatBg(0)}">+${f1(critAvg)}</td><td>${bar(critAvg,'--accent')}</td></tr>
+        </tbody></table></div>`;
+      const dpsT = dps.length ? `<div class="tablewrap" style="border:0"><table class="cmpT"><thead><tr><th>ДД из группы</th><th>Шанс / крит. урон</th><th>Крит-баффы с мульти-критом</th><th>Без мульти-крита</th><th>Итого от вас</th></tr></thead><tbody>
+        ${dps.map(x=>`<tr><td><span style="display:inline-flex;align-items:center;gap:8px"><span class="emb" style="${emb(x.cl.emb,26)}"></span>${esc(x.cl.n)}</span></td><td class="n">${x.cg.c}% / ${x.cg.d}%${x.cg.bt?' <span class="help">(Blunt Thorn)</span>':''}</td><td class="n good">+${(x.cg.g*100).toFixed(2)}%</td><td class="n">+${(x.cg.g0*100).toFixed(2)}%</td><td class="hv" style="${heatBg(0)}">×${(P*(1+x.cg.g)).toFixed(2)}</td></tr>`).join('')}
+        </tbody></table></div><p class="help" style="margin:0">Шанс и крит. урон ДД — типичные для класса по лучшему билду сайта (с вашей группой по умолчанию). Крит-баффы саппорта ≈ шанс +${dps[0].cg.dc.toFixed(1)}% и крит. урон +${dps[0].cg.dd.toFixed(1)}% (оценка по логам). С мульти-критом шанс сверх 100% не пропадает, поэтому у ДД с высоким шансом они ценнее, чем было до патча.</p>`
+        : '<p class="help">Выберите ДД в «Группе» — покажу прирост для каждого с учётом его крита и мульти-крита.</p>';
+      $('answer').innerHTML = `
+        <div class="card2">
+          <div class="chead"><span class="emb" style="${emb(cls.emb,32)}"></span><h3>Ваш саппорт</h3><span class="help">${esc(cls.n)} · ${esc(cls.paths[pathIdx].n)}</span>${(()=>{const sn=store.get('impSnap'); return sn&&sn.cls===cls.id?'<span class="tag off">'+esc(sn.name)+'</span>':'';})()}</div>
+          <div class="stiles">${stile('--c-cr','r','Бафф атаки','+'+S.ae.toFixed(1)+'%','Усиление баффа атаки союзников')}${stile('--c-add','evo','Бафф урона','+'+S.de.toFixed(1)+'%','Усиление баффа урона союзников')}${stile('--c-cd','cd','Стигма','+'+S.st.toFixed(1)+'%','Эффективность стигмы (клейма)')}${stile('--c-dmg','cr','Базовая атака',Math.round(S.atk).toLocaleString('ru-RU'),'Базовая сила атаки саппорта')}</div>
+        </div>
+        <div class="card2">
+          <div class="hero"><div class="gain ${rel>=-0.0005?'good':''}">×${(1+tot).toFixed(2)}<small>урон каждого ДД вашей пати с вами (+${(tot*100).toFixed(0)}%) · топ-саппорт ${cls.n}: ×${(1+totT).toFixed(2)} · вы ${rel>=0?'+':''}${(rel*100).toFixed(1)}%</small></div></div>
+          ${tbl}
+          <p class="help" style="margin:0">Типичные значения — средний прирост урона ДД от топ-саппортов этого класса в ${SD.n} записях ДД (логи lostark.bible, ${DATA.skmeta?DATA.skmeta.date:''}), уже с учётом аптайма. Ваши — пересчёт по вашим статам относительно топ-саппортов RU-сервера (усиление баффа атаки ${S.T.ae}%, урона ${S.T.de}%, стигма ${S.T.st}%). Баффы перемножаются.</p>
+        </div>
+        <div class="card2"><div class="chead"><h3>ДД в группе и крит</h3></div>${dpsT}</div>
+        <div class="card2">${evoRow}</div>`;
+    }
     if($('applySup')) $('applySup').addEventListener('click',()=>{ ranks=supR; store.set('apRanks3',ranks); renderTree(); recompute(); });
     $('mbar').innerHTML='';
     updSummaries(); renderT5(ar); update();
@@ -2059,7 +2157,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
   $('charPanel').addEventListener('input',e=>{ if(e.target.matches('input[type=number]')) recompute(); });
   $('v-build').addEventListener('change',e=>{ if(e.target.matches('#c_t1, #c_t2, #c_t3')) partyEmb(); if(e.target.matches('#s_mana')) $('mpField').hidden=!$('s_mana').checked; if(e.target.matches('#c_t1, #c_t2, #c_t3, #c_dance, #s_mana, #s_back, #s_head, #stA, #stB, #s_bysk, #s_part')) recompute(); });
-  $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp, #g_crit_br, #g_crit_ot, #g_swift_br, #g_swift_ot, #g_grR, #g_grDmg, #g_grAdd, #g_grD, #g_grAs')) recompute(); });
+  $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp, #g_crit_br, #g_crit_ot, #g_swift_br, #g_swift_ot, #g_grR, #g_grDmg, #g_grAdd, #g_grD, #g_grAs, #sp_ae, #sp_de, #sp_st, #sp_atk')) recompute(); });
   $('charPanel').addEventListener('change',e=>{ if(e.target.matches('input[type=checkbox], #c_t1, #c_t2, #c_t3, #br1, #br2, #br3, #bc1, #bc2, #bc3')) recompute(); });
 
   // import panel: file of the saved page, drag & drop, or pasted page source
@@ -2110,7 +2208,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   updSnapBtn();
   $('impForm').addEventListener('submit',e=>{ e.preventDefault(); importByName(); });
   try{ $('impName').value=localStorage.getItem('laNick')||''; }catch(e){}
-  setClass(); restoreInputs(); renderTree(); recompute(); renderRef();
+  setClass(); restoreInputs(); applyRole(); renderTree(); recompute(); renderRef();
 })();
 
 </script>

@@ -770,8 +770,10 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
           <label>Урон при крите, %<input type="number" id="g_grR" min="0" max="20" step="0.01" value="0"></label>
           <label>Урон, %<input type="number" id="g_grDmg" min="-30" max="40" step="0.01" value="0"></label>
           <label>Доп. урон, %<input type="number" id="g_grAdd" min="0" max="40" step="0.01" value="0"></label>
+          <label>Крит. урон, %<input type="number" id="g_grD" min="0" max="40" step="0.01" value="0"></label>
+          <label>Скорость атаки, %<input type="number" id="g_grAs" min="0" max="20" step="0.01" value="0"></label>
         </div>
-        <p class="help" style="margin-top:6px">Редкость ядра (рамка): эпическое и легендарное открывают только пороги 10 и 14 оч., реликвия и древнее — 10, 14, 17–20; у древнего эффект 17 оч. сильнее, а заряд больше. Неактивные руниты (так их помечает Оружейная; без пометки — те, что не влезли в заряд) не дают ни очков, ни статов. Сумма активных эффектов ядер Хаоса и рунитов: «урон, наносимый критическими ударами» ядра Солнца Хаоса — тот же бонус, что у узла Critical и строки браслета (в KR-подсказках одна формулировка «치명타 시 적에게 주는 피해»): складывается с ними и при мульти-крите действует один раз; урон, урон по боссам и сила атаки — множителем урона; доп. урон рунитов — как доп. урон. Крит. урон и шанс крита скиллов из ядер Порядка добавляются к этим скиллам. При загрузке персонажа заполняется само.</p>
+        <p class="help" style="margin-top:6px">Редкость ядра (рамка): эпическое и легендарное открывают только пороги 10 и 14 оч., реликвия и древнее — 10, 14, 17–20; у древнего эффект 17 оч. сильнее, а заряд больше. Неактивные руниты (так их помечает Оружейная; без пометки — те, что не влезли в заряд) не дают ни очков, ни статов. Сумма активных эффектов ядер Хаоса и рунитов: «урон, наносимый критическими ударами» ядра Солнца Хаоса — тот же бонус, что у узла Critical и строки браслета (в KR-подсказках одна формулировка «치명타 시 적에게 주는 피해»): складывается с ними и при мульти-крите действует один раз; урон, урон по боссам, сила атаки и ожог Луны Хаоса — множителем урона; доп. урон рунитов и ядер — как доп. урон; крит. урон и скорость атаки ядер Хаоса — в свои поля. Крит. урон и шанс крита скиллов из ядер Порядка добавляются к этим скиллам. При загрузке персонажа заполняется само.</p>
       </div>
     </details>
     <details class="set" id="setSk">
@@ -937,7 +939,9 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       <li><span class="tag hyp">?</span>Импорт: гравировки ниже x4 считаются как реликтовые x4.</li>
       <li>Ядра Ark Grid: очки ядра = сумма очков активных рунитов; пороги и значения — из подсказки ядра (по его редкости); активность рунита — по пометке Оружейной.</li>
       <li><span class="tag hyp">?</span>«Урон при критическом ударе» ядра Солнца Хаоса складывается с узлом Critical и браслетом и действует один раз при мульти-крите — по одинаковой формулировке в KR-подсказках и формуле Inven (회심 применяется один раз); прямого подтверждения в патчноуте нет.</li>
-      <li><span class="tag hyp">?</span>Урон, урон по боссам ядер и рунитов — отдельные множители; сила атаки % — как такой же % урона; доп. урон рунитов складывается с остальным доп. уроном.</li>
+      <li><span class="tag hyp">?</span>Урон, урон по боссам ядер и рунитов — отдельные множители (так считают расчёты на Inven); доп. урон складывается с остальным доп. уроном. Сила атаки % на деле складывается с другими % силы атаки, поэтому сайт её немного завышает; на сравнение вариантов билда это не влияет.</li>
+      <li><span class="tag hyp">?</span>Ожог Луны Хаоса (огонь по боссам) — около 0.5% урона, на 17 оч. ×2 у реликвии и ×2.5 у древнего; оценка по таблицам прироста от ядер на Inven (ожог ≈ 60/74% кровотечения). Считается как урон без крита.</li>
+      <li><span class="tag hyp">?</span>Складывается ли «урон при крите» ядра с узлом Critical или перемножается, на Inven считают по-разному; разница меньше 0.03% урона, сайт складывает.</li>
     </ul>
   </section>
   <section>
@@ -955,6 +959,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       <li><a href="https://lostark.wiki.fextralife.com/Engravings" target="_blank" rel="noopener">Fextralife: названия гравировок</a>, <a href="https://en.namu.wiki/w/%EB%A1%9C%EC%8A%A4%ED%8A%B8%EC%95%84%ED%81%AC/%ED%81%B4%EB%9E%98%EC%8A%A4" target="_blank" rel="noopener">NamuWiki: названия классов</a></li>
       <li><a href="https://docs.google.com/spreadsheets/d/1gYHl_1xiT0PVZf_2w9STAfLDXA0DBYFl4JJiJ6ZmYqc/edit" target="_blank" rel="noopener">Таблица Evermind</a> (Inven): все 897 ячеек совпали с формулой сайта</li>
       <li><a href="https://www.inven.co.kr/board/lostark/4821/111078" target="_blank" rel="noopener">Inven: Blunt Thorn против мульти-крита</a> (신촌망령, 18.11.2026)</li>
+      <li>Inven: <a href="https://www.inven.co.kr/board/lostark/5498/68584" target="_blank" rel="noopener">эффекты ядер Хаоса и их цена</a>, <a href="https://www.inven.co.kr/board/lostark/4821/108143" target="_blank" rel="noopener">прирост от ядер по очкам</a>, <a href="https://www.inven.co.kr/board/lostark/4821/107588" target="_blank" rel="noopener">статы рунитов</a></li>
       <li><a href="https://lostark.bible/leaderboards" target="_blank" rel="noopener">lostark.bible</a>: доли урона скиллов по логам боёв (топ-логи рейдов, ноябрь 2026)</li>
       <li><a href="https://лостарк.рф/" target="_blank" rel="noopener">лостарк.рф</a> (Оружейная RU) и <a href="https://www.mokitoki.ru/statistics" target="_blank" rel="noopener">mokitoki.ru</a>: русские названия гравировок, формат RU-подсказок</li>
     </ol>
@@ -1333,7 +1338,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     synBy.forEach(([k,n,v])=>S(SYN[k],'Синергия: '+n,v));
     S('D','Прочее',num('g_cd')); S('as','Прочее',num('g_as')); S('ms','Прочее',num('g_ms'));
     const hasSup = team.some(c=>c.id.startsWith('sup_'));
-    S('R','Ark Grid: ядра',num('g_grR')); S('dmg','Ark Grid: урон, сила атаки, урон по боссам',num('g_grDmg')); S('add','Ark Grid: руниты',num('g_grAdd'));
+    S('R','Ark Grid: ядра',num('g_grR')); S('dmg','Ark Grid: урон, сила атаки, урон по боссам',num('g_grDmg')); S('add','Ark Grid: руниты и ядра',num('g_grAdd')); S('D','Ark Grid: ядра',num('g_grD')); S('as','Ark Grid: ядра',num('g_grAs'));
     S('evo','Прочее',num('g_evo')); if($('c_dance').checked && hasSup) S('evo','Passionate Dance саппорта',14);
     SLOTS.forEach((sl,si)=>[0,1,2].forEach(li=>{ const o=ACCOPT[$(`a${si}_${li}`).value]; const n=o.v[+$(`a${si}_${li}g`).value]||0; const K={C:'C',D:'D',add:'add',dmg:'dmg'}[o.k]; if(K) S(K,`${sl.n}: ${o.n}`,n); }));
     (brOv||['br1','br2','br3'].map(id=>$(id).value)).forEach(v=>{ const bb=BRACE.find(o=>o.v===v); if(!bb||!bb.v) return; const n='Браслет: '+bb.n.split(' ·')[0]; S('C',n,bb.C||0); S('D',n,bb.D||0); S('R',n,bb.R||0); S('add',n,bb.add||0); S('dmg',n,bb.dmg||0); });
@@ -1392,7 +1397,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   // Ark Grid (ядра и руниты): core points = sum of the runites' Order/Chaos points; effects unlock at 10/14 (Legendary and below) or up to 20 (Relic, Ancient)
   function gridAnalyze(grid, gridOn){
     const onMap=Object.fromEntries(gridOn||[]);
-    const cores=[], tot={R:0,dmg:0,atk:0,add:0,boss:0,C:0}, perSkill=[];
+    const cores=[], tot={R:0,dmg:0,atk:0,add:0,boss:0,C:0,D:0,as:0}, perSkill=[];
     const num=x=>parseFloat(String(x).replace(',','.'))||0;
     (grid||[]).filter(([k])=>/_\d{3}$/.test(k) && !/_\d{3}_\d{3}$/.test(k)).forEach(([k,t])=>{
       // core charge (willpower) depends on rarity; runites are powered in slot order while the charge lasts
@@ -1412,9 +1417,11 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       const grade=/Древн|고대/.test(t)?'Древнее':/Реликви|유물/.test(t)?'Реликвия':/Легендар|전설/.test(t)?'Легендарное':/Эпич|영웅/.test(t)?'Эпическое':'';
       const pts=gems.reduce((a,g)=>a+g.pts,0), cap=/Легендар|Эпич/.test(grade)?14:20;
       const effT=((t.split(/(?:Эффект ядра|코어 옵션) \| /)[1]||'').split(' | ')[0]);
-      const parts=effT.split(/\[(\d+)\s*(?:оч\.|P)\]/); const act=[], fx={R:0,dmg:0,atk:0,C:0};
+      const parts=effT.split(/\[(\d+)\s*(?:оч\.|P)\]/); const act=[], fx={R:0,dmg:0,atk:0,C:0,D:0,add:0,as:0}; let burn=0, burnInc=0;
       for(let i=1;i<parts.length;i+=2){ const thr=+parts[i], txt=parts[i+1].trim(); if(thr>Math.min(pts,cap)) continue; act.push([thr,txt]);
         txt.split(/\.\s|;|, а |, но |하지만|하고,|고,/).forEach(pt=>{
+          // Chaos Moon burn (DoT on bosses): ≈0.5% of damage, +100% (Relic) / +150% (Ancient) at 17 points — estimate from Inven core tables
+          if(/ожог|화상/i.test(pt)){ const inc=(pt.match(/(?:ожога|화상의 피해량이)[^%\d]*?([\d.,]+)\s*%/)||[])[1]; if(inc) burnInc=num(inc); else burn=0.5; return; }
           const neg=/уменьшается|снижается|감소/.test(pt);
           const v=num((pt.match(/(?:повышается|увеличивается|уменьшается|снижается|ещё|еще)[^%\d]*?([\d.,]+)\s*%/)||pt.match(/([\d.,]+)\s*%\s*(?:추가로\s*)?(?:증가|감소)/)||[])[1]);
           if(!v || /в течение|초 동안|сек\./.test(pt) && !/«/.test(pt)) return;
@@ -1423,8 +1430,12 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
           else if(names.length && /Критический урон|Шанс критического удара/i.test(pt)) perSkill.push({names, C:/Шанс/i.test(pt)?sg*v:0, D:/Критический урон/i.test(pt)?sg*v:0, core:name});
           else if(/^\s*(?:Наносимый урон|Урон по противникам типа|적에게 주는 피해|보스)/i.test(pt)) fx.dmg+=sg*v;
           else if(/^\s*(?:Сила атаки повышается|공격력이)/.test(pt) && /%/.test(pt)) fx.atk+=sg*v;
-          else if(/^\s*(?:Шанс критического удара повышается|치명타 적중률이)/i.test(pt)) fx.C+=sg*v; }); }
-      ['R','dmg','atk','C'].forEach(q=>tot[q]+=fx[q]);
+          else if(/^\s*(?:Шанс критического удара повышается|치명타 적중률이)/i.test(pt)) fx.C+=sg*v;
+          else if(/^\s*(?:Критический урон (?:дополнительно )?повышается|치명타 피해가)/i.test(pt)) fx.D+=sg*v;
+          else if(/^\s*(?:Дополнительный урон (?:дополнительно )?повышается|Доп\. урон|추가 피해가)/i.test(pt)) fx.add+=sg*v;
+          else if(/^\s*(?:Скорость атаки (?:дополнительно )?повышается|공격 속도가)/i.test(pt)) fx.as+=sg*v; }); }
+      if(burn) fx.dmg+=burn*(1+burnInc/100);
+      ['R','dmg','atk','C','D','as'].forEach(q=>tot[q]+=fx[q]); tot.add+=fx.add;
       cores.push({name, type, grade, ic, pts, act, fx, gems:gems.length, capW, usedW, offG}); });
     return {cores, tot, perSkill};
   }
@@ -1516,7 +1527,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     const G=gridAnalyze(d.grid, d.gridOn);
     if(G.cores.length){
       const mul=(1+G.tot.dmg/100)*(1+G.tot.atk/100)*(1+G.tot.boss/100)-1;
-      $('g_grR').value=+G.tot.R.toFixed(2); $('g_grDmg').value=+(mul*100).toFixed(2); $('g_grAdd').value=+G.tot.add.toFixed(2);
+      $('g_grR').value=+G.tot.R.toFixed(2); $('g_grDmg').value=+(mul*100).toFixed(2); $('g_grAdd').value=+G.tot.add.toFixed(2); $('g_grD').value=+G.tot.D.toFixed(2); $('g_grAs').value=+G.tot.as.toFixed(2);
       if(G.tot.C) $('g_cr').value=+G.tot.C.toFixed(2);
       const sk=skCustom[cls.id+':'+pathIdx]; let nPS=0;
       if(sk) G.perSkill.forEach(e=>sk.forEach(k=>{ if(e.names.includes(k.n)){ k.eff=[...(k.eff||[]),{C:e.C||0,D:e.D||0,core:e.core}]; nPS++; } }));
@@ -1524,7 +1535,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       saved.grid={cls:cls.id, cores:G.cores.map(c=>({n:c.name,t:c.type,g:c.grade,ic:c.ic,p:c.pts,a:c.act.map(x=>x[0]),fx:c.fx,w:c.capW,u:c.usedW,off:c.offG})), tot:G.tot};
       const offT=G.cores.filter(c=>c.offG).map(c=>`${c.name}: ${c.offG}`); if(offT.length) warn.push('неактивные руниты (не работают и не дают очков) — '+offT.join(', '));
       log.push(`ядра: ${G.cores.length}, урон при крите +${G.tot.R.toFixed(2)}%, урон +${(mul*100).toFixed(2)}%, доп. урон рунитов +${G.tot.add.toFixed(2)}%${nPS?`, крит скиллов из ядер Порядка: ${nPS}`:''}`);
-    } else { saved.grid=null; ['g_grR','g_grDmg','g_grAdd'].forEach(id=>$(id).value=0); }
+    } else { saved.grid=null; ['g_grR','g_grDmg','g_grAdd','g_grD','g_grAs'].forEach(id=>$(id).value=0); }
     renderGrid();
     saveChar(); recompute();
     return {log, warn};
@@ -1863,13 +1874,13 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   const coreRing = c => `box-shadow:0 0 0 2px ${GRADE_C[c.g]||'transparent'}`;
   const coreImg = (c,size) => `<span class="eic" style="background-image:url(cores.png);width:${size}px;height:${size}px;background-size:${6*size}px ${size}px;background-position:-${coreIdx(c)*size}px 0;border-radius:50%;${coreRing(c)}"></span>`;
   const gridOf = () => (saved.grid && saved.grid.cls===cls.id) ? saved.grid : null;
-  const coreFx = c => [c.fx&&c.fx.R?`урон при крите +${+c.fx.R.toFixed(2)}%`:'', c.fx&&c.fx.dmg?`урон ${c.fx.dmg>0?'+':''}${+c.fx.dmg.toFixed(2)}%`:'', c.fx&&c.fx.atk?`сила атаки +${+c.fx.atk.toFixed(2)}%`:''].filter(Boolean).join(' · ');
+  const coreFx = c => [c.fx&&c.fx.R?`урон при крите +${+c.fx.R.toFixed(2)}%`:'', c.fx&&c.fx.D?`крит. урон +${+c.fx.D.toFixed(2)}%`:'', c.fx&&c.fx.C?`шанс крита +${+c.fx.C.toFixed(2)}%`:'', c.fx&&c.fx.add?`доп. урон +${+c.fx.add.toFixed(2)}%`:'', c.fx&&c.fx.as?`скор. атаки +${+c.fx.as.toFixed(2)}%`:'', c.fx&&c.fx.dmg?`урон ${c.fx.dmg>0?'+':''}${+c.fx.dmg.toFixed(2)}%`:'', c.fx&&c.fx.atk?`сила атаки +${+c.fx.atk.toFixed(2)}%`:''].filter(Boolean).join(' · ');
   function coreIco(c, size=36){ const t=`${c.n} — ${c.g||''} ${c.t}, ${c.p} оч. (пороги ${c.a.join(', ')||'нет'})${coreFx(c)?'. '+coreFx(c):''}`;
     return `<span class="ib" title="${esc(t)}" aria-label="${esc(t)}">${coreImg(c,size)}${c.p?`<em>${c.p}</em>`:''}</span>`; }
   function renderGrid(){
     const g=gridOf();
     $('gridCores').innerHTML = g ? g.cores.map(c=>`<div class="gcore">${coreImg(c,36)}<b>${esc(c.n)}</b><span class="pt">${c.p} оч.</span><span class="fx">${esc(c.t)}${c.g?` · <b style="color:${GRADE_C[c.g]||'inherit'}">${esc(c.g)}</b>`:''}${c.w?` · заряд ${c.u}/${c.w}`:''}${c.off?` · <span class="bad">${c.off} рунит. не активн.</span>`:''} · пороги: ${c.a.join(', ')||'нет'}${coreFx(c)?' · '+esc(coreFx(c)):''}</span></div>`).join('') : '<p class="help" style="margin:0">Загрузите персонажа по нику — ядра и руниты подтянутся из Оружейной. Или впишите суммы вручную.</p>';
-    $('sumGrid').textContent = (g?g.cores.length+' ядер · ':'')+`при крите +${num('g_grR')}% · урон +${num('g_grDmg')}% · доп. +${num('g_grAdd')}%`;
+    $('sumGrid').textContent = (g?g.cores.length+' ядер · ':'')+`при крите +${num('g_grR')}% · урон +${num('g_grDmg')}% · доп. +${num('g_grAdd')}%`+(num('g_grD')?` · крит. урон +${num('g_grD')}%`:'');
   }
   function updSummaries(){
     const cur=curEng();
@@ -2019,7 +2030,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
   $('charPanel').addEventListener('input',e=>{ if(e.target.matches('input[type=number]')) recompute(); });
   $('v-build').addEventListener('change',e=>{ if(e.target.matches('#c_t1, #c_t2, #c_t3')) partyEmb(); if(e.target.matches('#s_mana')) $('mpField').hidden=!$('s_mana').checked; if(e.target.matches('#c_t1, #c_t2, #c_t3, #c_dance, #s_mana, #s_back, #s_head, #stA, #stB, #s_bysk, #s_part')) recompute(); });
-  $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp, #g_crit_br, #g_crit_ot, #g_swift_br, #g_swift_ot, #g_grR, #g_grDmg, #g_grAdd')) recompute(); });
+  $('v-build').addEventListener('input',e=>{ if(e.target.matches('#s_mp, #g_crit_br, #g_crit_ot, #g_swift_br, #g_swift_ot, #g_grR, #g_grDmg, #g_grAdd, #g_grD, #g_grAs')) recompute(); });
   $('charPanel').addEventListener('change',e=>{ if(e.target.matches('input[type=checkbox], #c_t1, #c_t2, #c_t3, #br1, #br2, #br3, #bc1, #bc2, #bc3')) recompute(); });
 
   // import panel: file of the saved page, drag & drop, or pasted page source

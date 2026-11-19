@@ -6,7 +6,8 @@
 Открыть: https://xslowly343.github.io/LA-multicrit/
 
 Источники данных: официальный патчноут и Official Armory Lost Ark KR, loagg.com,
-Mungga Lab, Inven, daloa.xyz, Maxroll. Иконки и эмблемы — материалы Smilegate RPG.
+Mungga Lab, Inven, daloa.xyz, Maxroll; доли урона скиллов — логи боёв lostark.bible
+(топ-логи рейдов, 329 логов, ноябрь 2026). Иконки и эмблемы — материалы Smilegate RPG.
 
 ## Загрузка персонажа по нику: прокси на Cloudflare Worker
 

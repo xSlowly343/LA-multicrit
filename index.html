@@ -249,6 +249,8 @@ header.top .lede{margin-top:6px;font-size:16px}
 .switch[aria-checked="true"] .knob::after{transform:translateX(16px);background:var(--accent)}
 body:not(.adv) .adv-only{display:none!important}
 body.adv .simple-only{display:none!important}
+body.sup .dps-only{display:none!important}
+body:not(.sup) .sup-only{display:none!important}
 .step{display:flex;gap:10px;align-items:center;margin:16px 0 10px}
 .step:first-child{margin-top:0}
 .step b{display:block;font-family:var(--f-display);font-size:15px}
@@ -707,7 +709,8 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     <div class="sbar-row" style="margin-top:10px">
       <button type="button" id="clsToggle" class="clspick" aria-expanded="false" aria-controls="clsGrid" title="Сменить класс"><span class="emb" id="c_emb"></span><span id="clsName"></span><span class="caret" aria-hidden="true">▾</span></button>
       <select id="c_class" aria-label="Класс" hidden></select>
-      <div class="seg" id="q_paths" role="group" aria-label="Путь Enlightenment"></div>
+      <div class="seg" id="q_role" role="group" aria-label="Роль"><button type="button" data-role="dps" aria-pressed="true">ДД</button><button type="button" data-role="sup" aria-pressed="false">Саппорт</button></div>
+      <div class="seg dps-only" id="q_paths" role="group" aria-label="Путь Enlightenment"></div>
     </div>
     <div class="clsgrid small" id="clsGrid" hidden></div>
     <p class="help adv-only" id="c_classInfo" style="margin:6px 0 0"></p>
@@ -722,7 +725,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   <textarea id="copyBox" hidden rows="4" style="width:100%" aria-label="Текст билда"></textarea>
 
   <div class="settings">
-    <details class="set" id="setEng">
+    <details class="set dps-only" id="setEng">
       <summary><b>Гравировки</b><span class="sum" id="sumEng"></span></summary>
       <div class="setbody">
         <div class="row" style="margin-bottom:8px;font-size:14px;flex-wrap:wrap"><span>Фетранит:</span>
@@ -734,7 +737,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         <p class="help">Замок — не менять при подборе. В списке — сколько урона даст вариант.</p>
       </div>
     </details>
-    <details class="set">
+    <details class="set dps-only">
       <summary><b>Tier 1 Evolution</b><span class="sum" id="sumT1"></span></summary>
       <div class="setbody">
         <div class="t1row">
@@ -756,10 +759,24 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         </div>
       </div>
     </details>
-    <details class="set">
+    <details class="set dps-only">
       <summary><b>Узлы класса</b><span class="sum" id="sumNodes"></span></summary>
       <div class="setbody">
         <div id="q_nodes"></div>
+      </div>
+    </details>
+    <details class="set sup-only" id="setSupSt" open>
+      <summary><b>Статы саппорта</b><span class="sum" id="sumSup"></span></summary>
+      <div class="setbody">
+        <div class="t1row">
+          <label>Усиление баффа атаки, %<input type="number" id="sp_ae" min="0" max="100" step="0.01" value="0"></label>
+          <label>Усиление баффа урона, %<input type="number" id="sp_de" min="0" max="100" step="0.01" value="0"></label>
+          <label>Эффективность стигмы, %<input type="number" id="sp_st" min="0" max="100" step="0.01" value="0"></label>
+        </div>
+        <div class="t1row" style="margin-top:8px">
+          <label>Сила атаки<input type="number" id="sp_atk" min="0" max="2000000" step="100" value="0"></label>
+        </div>
+        <p class="help" style="margin-top:6px">Считаются из полировки (кольца — усиление баффа атаки и урона, ожерелье — стигма), рунитов и ядер Хаоса («Непреклонный дух», «Абсолютная отдача», «Сила стигмы»). Сравнение идёт с топ-саппортами вашего класса на RU-сервере по тем же источникам; 0 — значит «как у топ-саппорта». При загрузке персонажа заполняется само.</p>
       </div>
     </details>
     <details class="set" id="setGrid">
@@ -776,7 +793,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         <p class="help" style="margin-top:6px">Редкость ядра (рамка): эпическое открывает только порог 10 оч., легендарное — 10 и 14, реликвия и древнее — 10, 14, 17–20; у древнего эффект 17 оч. сильнее, а заряд больше. Неактивные руниты (так их помечает Оружейная; без пометки — те, что не влезли в заряд) не дают ни очков, ни статов. Сумма активных эффектов ядер Хаоса и рунитов: «урон, наносимый критическими ударами» ядра Солнца Хаоса — тот же бонус, что у узла Critical и строки браслета (в KR-подсказках одна формулировка «치명타 시 적에게 주는 피해»): складывается с ними и при мульти-крите действует один раз; урон, урон по боссам, сила атаки и ожог Луны Хаоса — множителем урона; доп. урон рунитов и ядер — как доп. урон; крит. урон и скорость атаки ядер Хаоса — в свои поля. Крит. урон и шанс крита скиллов из ядер Порядка добавляются к этим скиллам. При загрузке персонажа заполняется само.</p>
       </div>
     </details>
-    <details class="set" id="setSk">
+    <details class="set dps-only" id="setSk">
       <summary><b>Скиллы</b><span class="sum" id="sumSk"></span></summary>
       <div class="setbody">
         <label class="chk"><input type="checkbox" id="s_mana" checked> Тратят ману</label>

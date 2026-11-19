@@ -1367,7 +1367,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       stats:[...doc.querySelectorAll('.profile-ability-battle > ul > li')].map(li=>{ const sp=li.querySelectorAll(':scope > span'); return [s(sp[0]&&sp[0].textContent), s(sp[1]&&sp[1].textContent)]; }),
       nodes:[...doc.querySelectorAll('.profile-skill-arkpassive__item')].map(el=>[el.classList.contains('evolution')?'evo':el.classList.contains('enlightenment')?'enl':'leap', s((q(el,'.profile-arkpassive__info')||{}).textContent), file(q(el,'.profile-arkpassive__slot img'))]).filter(n=>{ const k=n.join('|'); if(seen.has(k)) return false; seen.add(k); return true; }),
       eng:[...doc.querySelectorAll('.profile-ability-engrave li')].map(li=>{ const sp=q(li,'span'); return [s(sp&&q(sp,'font')&&q(sp,'font').textContent), sp?sp.innerHTML:'']; }),
-      equip:Object.entries(P.Equip||{}).map(([k,v])=>[T(v&&v.Element_000&&v.Element_000.value), flat(v), k]).filter(e=>/목걸이|귀걸이|반지|팔찌|ожерелье|серьг|кольц|браслет/i.test(e[0]) || /^E[0-9a-f]+_0(0[6-9]|10|26)$/i.test(e[2])),
+      equip:Object.entries(P.Equip||{}).map(([k,v])=>[T(v&&v.Element_000&&v.Element_000.value), flat(v), k]).filter(e=>/^E[0-9a-f]+_\d{3}$/i.test(e[2]) ? /_0(0[6-9]|10|26)$/.test(e[2]) : /목걸이|귀걸이|반지|팔찌|ожерелье|серьг|кольц|браслет/i.test(e[0])), // by Armory slot (avatar «Серьги …» sit in other slots); by name only without a slot key
       grid:Object.entries(P.ArkGrid||{}).map(([k,v])=>[k, flat(v)]),
       // runites the Armory marks as powered (class «active» on the slot); empty for older saved pages
       gridOn:[...doc.querySelectorAll('.arkgrid__slot_list [class*="gem_slot"][data-item]')].map(el=>[el.getAttribute('data-item'), el.classList.contains('active')]),
@@ -1474,7 +1474,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     // stats: displayed Crit / Swiftness include Evolution Tier 1 points (50 per level)
     const st = k => { const row=d.stats.find(s=>k.includes(s[0])); return row?intR(row[1]):null; };
     const cr=st(['치명','Смертоносность']), sw=st(['신속','Сноровка']);
-    const isBr = e => /_026$/.test(e[2]||'') || /팔찌|браслет/i.test(e[0]);
+    const isBr = e => e[2] ? /_026$/.test(e[2]) : /팔찌|браслет/i.test(e[0]);
     const brT=((d.equip||[]).find(isBr)||['',''])[1];
     const brStat=re=>Math.min(120,intR((brT.match(re)||[])[1]||0));
     const setStat=(tot,lvl,re,br,ot,label)=>{ if(tot===null) return; const b=brStat(re); $(br).value=b; $(ot).value=Math.max(0,tot-50*lvl-b); log.push(`${label} ${tot} = Ark Passive ${50*lvl} + браслет ${b} + прочее ${Math.max(0,tot-50*lvl-b)}`); };
@@ -1494,7 +1494,7 @@ ul.thr li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     const accs=d.equip.filter(e=>!isBr(e));
     // slot by the Armory equipment key (_006 necklace, _007/_008 earrings, _009/_010 rings), by item name otherwise (any case: «Серьги …», «… серьги»)
     const KEYSLOT={'006':0,'007':1,'008':1,'009':3,'010':3};
-    const slotOf = (nm,key) => { const m=/_0(\d\d)$/.exec(key||''); const ks=m?KEYSLOT['0'+m[1]]:undefined; if(ks!==undefined) return ks; return /목걸이|ожерелье/i.test(nm)?0:/귀걸이|серьг/i.test(nm)?1:/반지|кольц/i.test(nm)?3:-1; };
+    const slotOf = (nm,key) => { if(key){ const m=/_(\d{3})$/.exec(key); const ks=m?KEYSLOT[m[1]]:undefined; return ks===undefined?-1:ks; } return /목걸이|ожерелье/i.test(nm)?0:/귀걸이|серьг/i.test(nm)?1:/반지|кольц/i.test(nm)?3:-1; };
     const used={0:0,1:0,3:0}; let nAcc=0;
     accs.forEach(([nm,txt,key])=>{ const base=slotOf(nm,key); if(base<0) return; const si = base===0?0:base+Math.min(1,used[base]++); if(base===0 && used[0]++>0) return;
       const seg = (txt.split(/연마 효과|Эффект полировки/)[1]||'').split(/아크 패시브|Очки системы/)[0];
